@@ -1,0 +1,58 @@
+.Dash-card {
+    color: #9E9E9E;
+    font-size: 30px;
+    padding-left: 30px;
+    padding-top: 20px;
+  }
+  
+  .count {
+    color: #00A8A8;
+    font-size: 58px;
+    font-weight: bold;
+    padding-top: 45px;
+    padding-left: 35px;
+  }
+  
+  .requests {
+    color: #ffffff;
+    background-color: #161D20;
+    width: 589px;
+    height: 686px;
+    margin-top: 10px;
+    margin-left: 50px;
+    border-radius: 20px;
+    font-size: 25px;
+    padding-left: 30px;
+    padding-top: 20px;
+    margin-bottom: 50px;
+  }
+  
+  .issues {
+    color: #ffffff;
+    background-color: #161D20;
+    width: 736px;
+    height: 686px;
+    margin-top: 10px;
+    margin-left: 20px;
+    border-radius: 20px;
+    font-size: 25px;
+    padding-left: 30px;
+    padding-top: 20px;
+    margin-bottom: 50px;
+    margin-right: 30px;
+  }
+  
+  .ViewAll-btn {
+    width: 100px;
+    margin-top: 150px;
+    margin-left: 78%;
+  }
+  
+  .user-icon{
+    margin-right: 20px;
+    font-size: 70px;
+    margin-left: 30%;
+    margin-bottom: 50px;
+    margin-top: 10px;
+    color: #00A8A8;
+  }
