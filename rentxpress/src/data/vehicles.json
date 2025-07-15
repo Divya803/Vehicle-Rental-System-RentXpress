@@ -1,0 +1,144 @@
+[
+  {
+    "id": 1,
+    "name": "Toyota Axio",
+    "price": 8000,
+    "image": "https://kai-and-karo.ams3.cdn.digitaloceanspaces.com/media/vehicles/images/IMG-20240118-WA0001.jpg",
+    "category": "Car"
+  },
+  {
+    "id": 2,
+    "name": "Honda Fit GP5",
+    "price": 7500,
+    "image": "https://i.pinimg.com/736x/5b/5f/e9/5b5fe909263ff7f7b3822eef89e359bb.jpg",
+    "category": "Car"
+  },
+  {
+    "id": 3,
+    "name": "Suzuki Alto K10",
+    "price": 4500,
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtw7keflgiJvkpBLDQTHETa58H9uwKt-eqc8ojkItfo-cTjjmUPTzDF_ymUwFzfgDcEes&usqp=CAU",
+    "category": "Car"
+  },
+  {
+    "id": 4,
+    "name": "Nissan X-Trail",
+    "price": 12000,
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT12xoUE4U8GmZvv4D7izuOW7POk7w-R2tRKg&s",
+    "category": "Car"
+  },
+  {
+    "id": 5,
+    "name": "Toyota HiAce",
+    "price": 16000,
+    "image": "https://image-cdn.beforward.jp/large/201704/750237/BF627193_00c171.jpg",
+    "category": "Van"
+  },
+  {
+    "id": 6,
+    "name": "Nissan Caravan",
+    "price": 14000,
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Nissan_Caravan_E24_003.JPG/1200px-Nissan_Caravan_E24_003.JPG",
+    "category": "Van"
+  },
+  {
+    "id": 7,
+    "name": "Suzuki Every",
+    "price": 6000,
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Suzuki_Every_PA_4WD_DA64V_0371.JPG/1200px-Suzuki_Every_PA_4WD_DA64V_0371.JPG",
+    "category": "Van"
+  },
+  {
+    "id": 8,
+    "name": "Bajaj RE Three-Wheeler",
+    "price": 1300,
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Bajaj_auto-rickshaw_in_Sri_Lanka.jpg/800px-Bajaj_auto-rickshaw_in_Sri_Lanka.jpg",
+    "category": "Threewheel"
+  },
+  {
+    "id": 9,
+    "name": "TVS Apache RTR 160",
+    "price": 800,
+    "image": "https://www.team-bhp.com/sites/default/files/styles/check_extra_large_for_review/public/rtr.jpeg",
+    "category": "Motorbike"
+  },
+  {
+    "id": 10,
+    "name": "Bajaj Pulsar NS200",
+    "price": 850,
+    "image": "https://bikesguide.ikman.lk/wp-content/uploads/2024/02/ns-200-featured.jpg",
+    "category": "Motorbike"
+  },
+  {
+    "id": 11,
+    "name": "Ashok Leyland Viking Bus",
+    "price": 25000,
+    "image": "https://d2t1xqejof9utc.cloudfront.net/screenshots/pics/70b10596e3691e7c485baf3532e8e493/large.JPG",
+    "category": "Bus"
+  },
+  {
+    "id": 12,
+    "name": "Tata LPO Bus",
+    "price": 23000,
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpgXG_BpcMDT4VvVe535M4GhSDWOzpeHBXkg&s",
+    "category": "Bus"
+  },
+  {
+    "id": 13,
+    "name": "Isuzu NPR Lorry",
+    "price": 10000,
+    "rental_price": 10000,
+    "image": "https://s.alicdn.com/@sc04/kf/HTB1A8AEouuSBuNjSsziq6zq8pXai.jpg_720x720q50.jpg",
+    "category": "Lorry"
+  },
+  {
+    "id": 14,
+    "name": "Tata Dimo Batta",
+    "price": 5000,
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTs1UNuSOmgZNH3MbRHhkkAOw78GVqsmhvHrg&s",
+    "category": "Lorry"
+  },
+  {
+    "id": 15,
+    "name": "Fuso Canter",
+    "price": 9500,
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6E-u726YPO1MtK1CWKAQ9eGF8qf71WG-ltYCyR0fHUzrFvYoTS1ZKAq_UrH25zMivzuY&usqp=CAU",
+    "category": "Lorry"
+  },
+  {
+    "id": 16,
+    "name": "Toyota Land Cruiser Prado",
+    "price": 23000,
+    "image": "https://carsforsale.co.ke/wp-content/uploads/2024/01/2018-Toyota-Land-Cruiser-Prado-TX-GDJ150.jpg",
+    "category": "Car"
+  },
+  {
+    "id": 17,
+    "name": "Mazda CX-5",
+    "price": 17000,
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3dKQOBqFdBasl9UiqVhOFUvKTMd2Hly8FrQ&s",
+    "category": "Car"
+  },
+  {
+    "id": 18,
+    "name": "Honda Civic",
+    "price": 14000,
+    "rental_price": 14000,
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/27074/civic-exterior-right-front-three-quarter-148155.jpeg?q=80",
+    "category": "Car"
+  },
+  {
+    "id": 19,
+    "name": "Toyota Hilux",
+    "price": 20000,
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPovpbDho-54qvnUXKmBnGZzZ93mSimN9gFQ&s",
+    "category": "Car"
+  },
+  {
+    "id": 20,
+    "name": "Mitsubishi L200",
+    "price": 19000,
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCiiwXhiD9-JAtgKXm5vARHraCda72VQX35A&s",
+    "category": "Car"
+  }
+]

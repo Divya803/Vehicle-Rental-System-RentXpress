@@ -1,0 +1,45 @@
+.vehicle-Dash-card {
+    color: #9E9E9E;
+    font-size: 30px;
+    padding-left: 30px;
+    padding-top: 20px;
+  }
+  
+  .vehicle-count {
+    color: #00A8A8;
+    font-size: 58px;
+    font-weight: bold;
+    padding-top: 30px;
+    padding-left: 35px;
+  }
+  
+  .vehicle-requests {
+    color: #ffffff;
+    background-color: #161D20;
+    width: 1400px;
+    height: 686px;
+    margin-top: 10px;
+    margin-left: 50px;
+    border-radius: 20px;
+    font-size: 25px;
+    padding-left: 30px;
+    padding-top: 20px;
+    margin-bottom: 50px;
+  }
+  
+  .ViewAll-btn {
+    width: 100px;
+    margin-top: 150px;
+    margin-left: 78%;
+  }
+  
+  .vehicle-icon{
+    margin-right: 20%;
+    font-size: 90px;
+    margin-left: 30%;
+    margin-bottom: 50px;
+    margin-top: 20px;
+    color: #00A8A8;
+  }
+
+  

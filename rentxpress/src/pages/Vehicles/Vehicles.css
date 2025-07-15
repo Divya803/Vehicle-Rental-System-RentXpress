@@ -1,0 +1,253 @@
+/* Hero Section
+.hero {
+    background-size: cover;
+    background-position: center;
+    background-color: #111517;
+    color: white;
+    text-align: center;
+    padding: 80px 20px;
+  }
+  
+  .hero-content h2 {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .hero-content h1 {
+    font-size: 40px;
+    font-weight: bold;
+  }
+  
+  .hero-content p {
+    font-size: 16px;
+  }
+  
+ 
+
+  .vehicle-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    background-color: #111517;
+  }
+  
+  .vehicle-card {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .vehicle-img {
+    width: 100%;
+    height: auto;
+    max-height: 150px;
+    object-fit: cover;
+  }
+  
+  .vehicle-card h3 {
+    font-size: 18px;
+    margin: 10px 0;
+  }
+  
+  .vehicle-card p {
+    font-size: 16px;
+    color: #666;
+  }
+  
+  .rent-button {
+    background-color: #00c4cc;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s ease-in-out;
+  }
+  
+  .rent-button:hover {
+    background-color: #009ba1;
+  }
+
+  .search-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .search-input {
+    width: 80%;
+    padding: 8px;
+    font-size: 16px;
+  }
+  
+  .category-dropdown {
+    padding: 8px;
+    font-size: 16px;
+    width: 15%;
+  }
+  
+   */
+
+   /* Vehicles.css */
+
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Hero Section */
+  .hero {
+    background-color:  #111517;
+    padding: 60px 0;
+    text-align: center;
+  }
+  
+  .hero-content h2 {
+    font-size: 2rem;
+    color: #fff
+
+  }
+  
+  .hero-content h1 {
+    font-size: 3rem;
+    margin: 20px 0;
+    color: #fff
+  }
+  
+  .hero-content p {
+    font-size: 1.2rem;
+    color: #fff;
+    margin-left: 70px;
+    margin-right: 70px;
+  }
+  
+  /* Search and Category Container */
+  .search-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    margin: 10px;
+  }
+  
+  .search-input {
+    padding: 10px;
+    width: 40%;
+    font-size: 1rem;
+    border: 1px solid #111111;
+    border-radius: 5px;
+    margin-left: 50%;
+    margin-right: 20px;
+  }
+  
+  .category-select {
+    padding: 10px;
+    width: 120px;
+    font-size: 1rem;
+    border: 1px solid #060404;
+    border-radius: 5px;
+    height: 40px;
+    margin-top: 7px;
+    margin-right: 20px;
+  }
+  
+  
+  /* Vehicle List Layout */
+  .vehicle-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 20px;
+    background-color: #060404;
+  }
+  
+  @media (max-width: 768px) {
+    .vehicle-list {
+      grid-template-columns: repeat(2, 1fr); /* 2 items per row on medium screens */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .vehicle-list {
+      grid-template-columns: 1fr; /* 1 item per row on small screens */
+    }
+  }
+  
+  /* Vehicle Card */
+  .vehicle-card {
+    background-color: #fff;
+    padding: 9px;
+    margin: 17px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+  
+  .vehicle-card:hover {
+    transform: translateY(-5px); /* Slight hover effect */
+  }
+  
+  .vehicle-img {
+    max-width: 100%;
+    height: 55%;
+    border-radius: 8px;
+  }
+  
+  .vehicle-card h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 10px 0;
+  }
+  
+  .vehicle-card p {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 15px;
+  }
+  
+  .rent-button {
+    padding: 10px 20px;
+    background-color:#00a8a8;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .rent-button:hover {
+    background-color: #161D20;
+  }
+  
+  /* Responsive Design Adjustments */
+  @media (max-width: 768px) {
+    .search-container {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .search-input,
+    .category-select {
+      width: 90%;
+      margin-bottom: 10px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .hero-content h1 {
+      font-size: 2.5rem;
+    }
+  
+    .hero-content p {
+      font-size: 1rem;
+    }
+  }
+  

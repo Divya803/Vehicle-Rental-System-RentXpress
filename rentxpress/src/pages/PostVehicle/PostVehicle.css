@@ -1,0 +1,87 @@
+.post-vehicle-container {
+    background-color:  #161D20;
+    padding: 20px;
+    border-radius: 10px;
+    width: 70%;
+    margin: auto;
+    color: white;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.post-vehicle-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.post-vehicle-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.post-vehicle-row {
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.post-vehicle-group {
+    display: flex;
+    flex-direction: column;
+    width: 45%; /* Ensures three fields fit in one row */
+}
+
+.post-vehicle-group label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: white;
+}
+
+.post-vehicle-input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    color: black;
+    background-color: white;
+    width: 100%;
+    box-sizing: border-box; /* Ensures padding is included in width */
+}
+
+.upload-container {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    justify-content: center;
+    align-items: center;
+    border: 2px dashed #ccc; /* Border for the input area */
+    padding: 20px;
+    width: 100%; /* Adjust width as needed */
+    height: 200px; /* Adjust height as needed */
+    position: relative;
+    text-align: center;
+}
+
+.upload-label {
+    cursor: pointer;
+    background-color: #00a8a8; /* Teal background for the label */
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.upload-info {
+    text-align: center;
+    font-size: 12px;
+    margin-top: 10px; /* Space between the label and info */
+}
+
+.post-vehicle-button-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
