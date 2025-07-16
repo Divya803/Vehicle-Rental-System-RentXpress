@@ -285,6 +285,27 @@ const rejectVerification = async (req, res) => {
 };
 
 
+const getVerificationIssues = async (req, res) => {
+  try {
+    const repo = AppDataSource.getRepository("VerificationRequest");
+
+    const rejectedRequests = await repo.find({
+      where: { status: "rejected" },
+      relations: ["user"],
+    });
+
+    const formatted = rejectedRequests.map((req) => ({
+      userId: req.user?.userId,
+      userName: `${req.firstName} ${req.lastName}`,
+      issue: req.issueDetails || "No issue specified",
+    }));
+
+    res.status(200).json(formatted);
+  } catch (error) {
+    console.error("Error fetching verification issues:", error);
+    res.status(500).json({ message: "Failed to fetch verification issues" });
+  }
+};
 
 
 module.exports = {
@@ -297,5 +318,6 @@ module.exports = {
   getPendingVerifications,
   approveVerification,
   getUserCountsByRole,
-  rejectVerification
+  rejectVerification,
+  getVerificationIssues
 };
