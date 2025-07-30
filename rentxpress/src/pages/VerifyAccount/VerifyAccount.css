@@ -6,7 +6,8 @@
     margin: auto;
     color: white;
     text-align: center;
-    margin-top: 50px;
+    margin-top: 40px;
+  
   }
   
   .verify-title {
@@ -101,6 +102,15 @@
   height: 100%;
   object-fit: cover;
 }
+
+.verify-subtitle {
+  font-size: 16px;
+  margin-bottom: 30px;
+  color: white;
+  text-align: center;
+ 
+}
+
 
 
   

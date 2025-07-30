@@ -1,18 +1,18 @@
-/* Ensure table content is centered */
+
 .centered-cell {
     display: block;
     text-align: center;
     width: 100%;
   }
   
-  /* Center text inside table headers */
   th, td {
     text-align: center !important;
     vertical-align: middle;
   }
   
-  /* Adjust delete icon alignment */
   .col7 {
     text-align: center;
   }
+  
+
   

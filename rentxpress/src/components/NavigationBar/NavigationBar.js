@@ -22,6 +22,7 @@ const HomeNavigationBar = () => {
           <li><Link to="/admin-dashboard" className="nav-link">Dashboard</Link></li>
           <li><Link to="/user-details" className="nav-link">Users</Link></li>
           <li><Link to="/pending-vehicle" className="nav-link">Pending Vehicles</Link></li>
+          <li><Link to="/user-dashboard" className="nav-link">User Dashboard</Link></li>
         </ul>
       </div>
 
