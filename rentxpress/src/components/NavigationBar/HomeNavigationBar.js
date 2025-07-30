@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import { Link } from "react-router-dom";
 import "./NavigationBar.css"; 
 import Button from "../Button/Button";
 import logo from "../../assets/logo.png";
@@ -22,6 +22,7 @@ const HomeNavigationBar = () => {
           <li><Link to="/admin-dashboard" className="nav-link">Dashboard</Link></li>
           <li><Link to="/user-details" className="nav-link">Users</Link></li>
           <li><Link to="/pending-vehicle" className="nav-link">Pending Vehicles</Link></li>
+          <li><Link to="/user-dashboard" className="nav-link">User Dashboard</Link></li>
         </ul>
       </div>
 

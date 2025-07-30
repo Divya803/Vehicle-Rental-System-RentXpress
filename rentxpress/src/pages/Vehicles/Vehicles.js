@@ -132,14 +132,14 @@ const Vehicles = () => {
   <button className="rent-button">RENT</button>
 </Link> */}
               {vehicle.isAvailable ? (
-  <Link to={`/rent-vehicles/${vehicle.vehicleId}`}>
-    <button className="rent-button">RENT</button>
-  </Link>
-) : (
-  <button className="rent-button" disabled style={{ opacity: 0.5, cursor: "not-allowed" }}>
-    NOT AVAILABLE
-  </button>
-)}
+                <Link to={`/rent-vehicles/${vehicle.vehicleId}`}>
+                  <button className="rent-button">RENT</button>
+                </Link>
+              ) : (
+                <button className="rent-button" disabled style={{ opacity: 0.5, cursor: "not-allowed" }}>
+                  NOT AVAILABLE
+                </button>
+              )}
 
             </div>
           ))}

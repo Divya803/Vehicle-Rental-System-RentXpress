@@ -362,11 +362,22 @@ const VerifyAccount = () => {
 
 
   return (
-    <div style={{ backgroundColor: "white", minHeight: "100vh" }}>
-      <NavigationBar />
-      <div className="verify-container">
-        <h2 className="verify-title">Verify Your Account</h2>
-        <form className="verify-form">
+<div style={{ backgroundColor: "white", minHeight: "100vh" }}>
+  <NavigationBar />
+  
+
+  <div className="verify-container">
+    
+    
+    <h2 className="verify-title">Verify Your Account</h2>
+    <div>
+    <p className="verify-subtitle">
+      <strong>To get started as a Driver or Vehicle Owner on our platform, please complete the verification process by providing your personal and identification details. 
+      Verified accounts help us maintain trust and safety across our rental community. Once verified, you'll be able to offer vehicles for rent or provide driving services, connect with customers, 
+      and become an active part of our growing network. We’re excited to have you on board!
+    </strong></p>
+  </div>
+    <form className="verify-form">
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="firstName">First Name</label>

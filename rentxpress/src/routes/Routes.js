@@ -12,6 +12,7 @@ import Vehicles from "../pages/Vehicles/Vehicles";
 import VerifyAccount from "../pages/VerifyAccount/VerifyAccount";
 import PostVehicle from "../pages/PostVehicle/PostVehicle";
 import PendingVehicle from "../pages/PendingVehicles/PendingVehicles";
+import UserDashboard from "../pages/UserDashboard/UserDashboard";
 
 function AppRoutes() {
   return (
@@ -28,6 +29,8 @@ function AppRoutes() {
       <Route path="/verify-account" element={<VerifyAccount />} />
       <Route path="/post-vehicle" element={<PostVehicle />} />
       <Route path="/pending-vehicle" element={<PendingVehicle />} />
+      <Route path="/user-dashboard" element={<UserDashboard />} />
+      {/* Add more routes as needed */}
     </Routes>
   );
 }
