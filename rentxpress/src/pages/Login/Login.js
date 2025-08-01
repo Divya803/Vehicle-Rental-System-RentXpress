@@ -10,29 +10,36 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      const res = await fetch("http://localhost:5000/api/users/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+  try {
+    const res = await fetch("http://localhost:5000/api/users/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (res.ok) {
-        localStorage.setItem("token", data.token); // Save token
-        alert("Login successful!");
-        navigate("/vehicles");
+    if (res.ok) {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("userRole", data.role);
+
+      alert("Login successful!");
+
+      if (data.role === "Admin") {
+        navigate("/admin-dashboard");
       } else {
-        alert(data.message || "Login failed");
+        navigate("/user-dashboard");
       }
-    } catch (err) {
-      alert("An error occurred");
-      console.error(err);
+    } else {
+      alert(data.message || "Login failed");
     }
-  };
+  } catch (err) {
+    alert("An error occurred");
+    console.error(err);
+  }
+};
 
   return (
     <div className="login-container">
@@ -86,4 +93,3 @@ const Login = () => {
 };
 
 export default Login;
-

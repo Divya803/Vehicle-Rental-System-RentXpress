@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
-import HomeNavigationBar from "../../components/NavigationBar/HomeNavigationBar";
+import HomeNavigationBar from "../../components/NavigationBar/NavigationBar";
 import "./HomePage.css";
 import Car from "../../assets/Car.png";
 import Button from "../../components/Button/Button";
