@@ -1,4 +1,4 @@
- .dashboard-container {
+ /* .dashboard-container {
   max-width: 900px;
   margin: 40px auto;
   padding: 20px;
@@ -51,4 +51,224 @@
 
 .dashboard-section strong {
   color: #0066cc;
+} */
+
+/* UserDashboard.css */
+
+.welcome-section {
+  padding: 40px 50px 20px 50px;
+  background: linear-gradient(135deg, #161D20 0%, #2A3B42 100%);
+  color: white;
+  margin-bottom: 30px;
+}
+
+.welcome-section h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+  color: #ffffff;
+}
+
+.welcome-section p {
+  font-size: 1.2rem;
+  margin: 0;
+  color: #9E9E9E;
+}
+
+/* Dashboard sections */
+.dashboard-section {
+  color: #ffffff;
+  background-color: #161D20;
+  border-radius: 20px;
+  padding: 30px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.verification-section {
+  flex: 1;
+  max-width: 500px;
+  min-height: 450px;
+}
+
+.bookings-section {
+  flex: 2;
+  min-width: 600px;
+  min-height: 450px;
+}
+
+.verification-card {
+  background-color: #1F2937;
+  border-radius: 12px;
+  padding: 20px;
+  border-left: 4px solid #00A8A8;
+}
+
+.verification-card h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.verification-card p {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Status indicators */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  gap: 6px;
+}
+
+.status-approved {
+  background-color: #10B98120;
+  color: #10B981;
+  border: 1px solid #10B981;
+}
+
+.status-pending {
+  background-color: #F59E0B20;
+  color: #F59E0B;
+  border: 1px solid #F59E0B;
+}
+
+.status-rejected {
+  background-color: #EF444420;
+  color: #EF4444;
+  border: 1px solid #EF4444;
+}
+
+.status-default {
+  background-color: #6B728020;
+  color: #6B7280;
+  border: 1px solid #6B7280;
+}
+
+/* Table enhancements */
+.dashboard-section table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dashboard-section table th,
+.dashboard-section table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #374151;
+}
+
+.dashboard-section table th {
+  background-color: #1F2937;
+  font-weight: 600;
+  color: #E5E7EB;
+}
+
+.dashboard-section table tr:hover {
+  background-color: #1F2937;
+}
+
+/* Empty state styling */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: #9E9E9E;
+  text-align: center;
+}
+
+.empty-state-icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+  .welcome-section {
+    padding: 30px 30px 15px 30px;
+  }
+  
+  .welcome-section h1 {
+    font-size: 2rem;
+  }
+  
+  .dashboard-section {
+    padding: 20px;
+  }
+  
+  .verification-section,
+  .bookings-section {
+    min-width: auto;
+    max-width: none;
+    flex: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .welcome-section {
+    padding: 20px;
+  }
+  
+  .welcome-section h1 {
+    font-size: 1.8rem;
+  }
+  
+  .dashboard-section {
+    padding: 15px;
+    margin: 10px 0;
+  }
+}
+
+/* Animation for loading states */
+.loading-spinner {
+  border: 2px solid #374151;
+  border-top: 2px solid #00A8A8;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Hover effects */
+.verification-card:hover {
+  transform: translateY(-2px);
+  transition: transform 0.2s ease-in-out;
+  box-shadow: 0 6px 20px rgba(0, 168, 168, 0.1);
+}
+
+.dashboard-section:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+/* Custom scrollbar for tables */
+.dashboard-section::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dashboard-section::-webkit-scrollbar-track {
+  background: #1F2937;
+  border-radius: 3px;
+}
+
+.dashboard-section::-webkit-scrollbar-thumb {
+  background: #00A8A8;
+  border-radius: 3px;
+}
+
+.dashboard-section::-webkit-scrollbar-thumb:hover {
+  background: #007A7A;
 }

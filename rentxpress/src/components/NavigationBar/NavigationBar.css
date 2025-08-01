@@ -53,12 +53,12 @@
 
 .nav-link:active {
   background-color: rgba(69, 117, 117, 0.5);
-  /* Change background color with reduced opacity */
 }
 
 .nav-button {
   margin-left: auto;
   width: 100px;
+  margin-right: 50%;
 
 }
 
@@ -67,9 +67,8 @@
   width: 50px;
   padding: 5px 10px;
   border-radius: 50px;
+  margin-right:2%;
 }
-
-
 
 .nav-icon {
   color: black;
@@ -77,4 +76,31 @@
 
 .nav-icon:hover {
   color: #457575;
+}
+
+
+.navbar .ant-dropdown-menu {
+  width: 1500px;
+
+}
+
+.ant-dropdown-menu {
+  min-width: 100px !important; 
+  padding: 10px 0 !important; 
+  
+}
+
+.ant-dropdown-menu-item {
+  height: 30px; 
+  line-height: 30px;  
+  font-size: 20px;
+  
+}
+
+.custom-dropdown .ant-dropdown-menu-item {
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  
 }
