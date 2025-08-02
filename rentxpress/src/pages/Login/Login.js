@@ -28,10 +28,12 @@ const Login = () => {
       alert("Login successful!");
 
       if (data.role === "Admin") {
-        navigate("/admin-dashboard");
-      } else {
-        navigate("/user-dashboard");
-      }
+    navigate("/admin-dashboard");
+  } else if (data.role === "Driver") {
+    navigate("/driver-dashboard");
+  } else {
+    navigate("/user-dashboard");
+  }
     } else {
       alert(data.message || "Login failed");
     }
