@@ -1,104 +1,7 @@
-// import React, { useState, useEffect } from "react";
-// import "./PendingVehicles.css";
-// import { Link, useNavigate } from "react-router-dom";
-// import { FaCarRear, FaCarOn } from "react-icons/fa6";
-// import { MdOutlineCarCrash } from "react-icons/md";
-// import NavigationBar from "../../components/NavigationBar/NavigationBar";
-// import VehicleCard from "../../components/AdminCard/VehicleCard";
-// import Button from "../../components/Button/Button";
-// import Table, { TableRow } from "../../components/Table/Table";
-
-// export default function AdDashboard() {
-//   const [pendingUsers, setPendingUsers] = useState([]);
-//   const [verificationIssues, setVerificationIssues] = useState([]);
-//   const navigate = useNavigate();
-
-//   // Static JSON data for pending verification requests
-//   const pendingUsersData = [
-//     { userId: 1, userName: "Alice Smith", requestDate: "2025-03-18" },
-//     { userId: 2, userName: "John Doe", requestDate: "2025-03-17" },
-//     { userId: 3, userName: "Emma Brown", requestDate: "2025-03-16" },
-//   ];
-
-//   // Static JSON data for verification issues
-//   const verificationIssuesData = [
-//     { userId: 4, userName: "Michael Lee", issue: "Invalid documents" },
-//     { userId: 5, userName: "Sophia Wilson", issue: "Mismatched ID details" },
-//     { userId: 6, userName: "David Johnson", issue: "Unclear image" },
-//   ];
-
-//   useEffect(() => {
-//     setPendingUsers(pendingUsersData);
-//   }, []);
-
-//   useEffect(() => {
-//     setVerificationIssues(verificationIssuesData);
-//   }, []);
-
-//   const formatDate = (dateString) => {
-//     const date = new Date(dateString);
-//     return isNaN(date.getTime()) ? "Invalid Date" : date.toISOString().split("T")[0];
-//   };
-
-//   return (
-//     <div style={{ backgroundColor: "white", minHeight: "200vh" }}>
-//       <NavigationBar />
-
-//       <div style={{ display: "flex" }}>
-//         <VehicleCard>
-//           <div style={{ display: "flex" }}>
-//             <div>
-//               <div className="vehicle-Dash-card">Pending Vehicles</div>
-//               <div className="vehicle-count">100</div>
-//             </div>
-//             <div className="vehicle-icon">
-//               <FaCarRear />
-//             </div>
-//           </div>
-//         </VehicleCard>
-//         <VehicleCard>
-//           <div style={{ display: "flex" }}>
-//             <div>
-//               <div className="vehicle-Dash-card">Approved Vehicles</div>
-//               <div className="vehicle-count">50</div>
-//             </div>
-//             <div className="vehicle-icon">
-//               <FaCarOn />
-//             </div>
-//           </div>
-//         </VehicleCard>
-//         <VehicleCard>
-//           <div style={{ display: "flex" }}>
-//             <div>
-//               <div className="vehicle-Dash-card">Rejected Vehicles</div>
-//               <div className="vehicle-count">30</div>
-//             </div>
-//             <div className="vehicle-icon">
-//               <MdOutlineCarCrash />
-//             </div>
-//           </div>
-//         </VehicleCard>
-
-//       </div>
-
-     
-
-//         {/* vehicle Request Table */}
-//         <div className="vehicle-requests">
-//           <p style={{ fontSize: "1.75rem", fontWeight: "500" }}>Vehicle Request</p>
-//           <div style={{ height: "410px" }}>
-            
-//           </div>
-//         </div>
-    
-//     </div>
-//   );
-// }
-
 import React, { useState, useEffect } from "react";
 import "./PendingReservations.css";
 import { Link, useNavigate } from "react-router-dom";
-import { FaCar, FaUser, FaClock, FaMapMarkerAlt, FaCheckCircle } from "react-icons/fa";
+import { FaCar, FaUser, FaClock, FaMapMarkerAlt, FaCheckCircle, FaToggleOn, FaToggleOff } from "react-icons/fa";
 import { MdOutlineCarCrash, MdAssignmentInd } from "react-icons/md";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import AdminCard from "../../components/AdminCard/AdminCard";
@@ -106,7 +9,6 @@ import Button from "../../components/Button/Button";
 import Table, { TableRow } from "../../components/Table/Table";
 import Modal from "../../components/Modal/Modal";
 import axios from "axios";
-
 
 export default function PendingReservations() {
   const [pendingRequests, setPendingRequests] = useState([]);
@@ -122,60 +24,30 @@ export default function PendingReservations() {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  // Static data for development - replace with actual API calls
-  const mockPendingRequests = [
-    {
-      id: 1,
-      customerName: "Alice Johnson",
-      customerPhone: "+94 77 123 4567",
-      vehicleType: "SUV",
-      vehicleName: "Toyota Prado",
-      pickupLocation: "Colombo",
-      dropoffLocation: "Kandy",
-      startDate: "2025-08-05",
-      endDate: "2025-08-07",
-      duration: "2 days",
-      needsDriver: true,
-      totalAmount: "Rs. 45,000",
-      requestDate: "2025-08-01",
-      status: "pending",
-      customerEmail: "alice.johnson@email.com"
-    },
-    {
-      id: 2,
-      customerName: "Michael Chen",
-      customerPhone: "+94 71 987 6543",
-      vehicleType: "Sedan",
-      vehicleName: "Honda Civic",
-      pickupLocation: "Negombo",
-      dropoffLocation: "Galle",
-      startDate: "2025-08-06",
-      endDate: "2025-08-08",
-      duration: "2 days",
-      needsDriver: true,
-      totalAmount: "Rs. 32,000",
-      requestDate: "2025-08-01",
-      status: "pending",
-      customerEmail: "michael.chen@email.com"
-    },
-    {
-      id: 3,
-      customerName: "Sarah Williams",
-      customerPhone: "+94 76 555 1234",
-      vehicleType: "Van",
-      vehicleName: "Toyota Hiace",
-      pickupLocation: "Colombo Airport",
-      dropoffLocation: "Sigiriya",
-      startDate: "2025-08-10",
-      endDate: "2025-08-12",
-      duration: "2 days",
-      needsDriver: true,
-      totalAmount: "Rs. 52,000",
-      requestDate: "2025-08-02",
-      status: "pending",
-      customerEmail: "sarah.williams@email.com"
-    }
-  ];
+  // Fetch data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/reservation/pending", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setPendingRequests(response.data);
+
+        // Optional stats
+        setVehicleCounts({
+          pending: response.data.length,
+          approved: 0,
+          rejected: 0
+        });
+      } catch (error) {
+        console.error("Error fetching reservations:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const mockAvailableDrivers = [
     {
@@ -216,29 +88,37 @@ export default function PendingReservations() {
     }
   ];
 
-  useEffect(() => {
-    // Simulate API calls
-    const fetchData = async () => {
-      try {
-        // Replace with actual API calls
-        setPendingRequests(mockPendingRequests);
-        setAvailableDrivers(mockAvailableDrivers);
-        setVehicleCounts({
-          pending: mockPendingRequests.length,
-          approved: 45,
-          rejected: 12
-        });
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return isNaN(date.getTime()) ? "Invalid Date" : date.toLocaleDateString();
+  };
+
+  // Toggle vehicle availability manually
+  const toggleVehicleAvailability = async (vehicleId, currentStatus) => {
+    try {
+      const response = await axios.patch(
+        `http://localhost:5000/api/reservation/vehicles/${vehicleId}/availability`,
+        { isAvailable: !currentStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // Update the local state
+      setPendingRequests(pendingRequests.map(req =>
+        req.vehicleId === vehicleId
+          ? { ...req, vehicleAvailable: !currentStatus }
+          : req
+      ));
+
+      alert(`Vehicle availability updated to ${!currentStatus ? 'Available' : 'Unavailable'}`);
+    } catch (error) {
+      console.error("Error updating vehicle availability:", error);
+      alert("Failed to update vehicle availability. Please try again.");
+    }
   };
 
   const handleAssignDriver = async () => {
@@ -260,7 +140,19 @@ export default function PendingReservations() {
         }
       );
 
-      alert("Driver assigned successfully!");
+      // Automatically set vehicle as unavailable when reservation is approved
+      await axios.patch(
+        `http://localhost:5000/api/vehicles/${selectedRequest.vehicleId}/availability`,
+        { isAvailable: false },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      alert("Driver assigned and vehicle marked as unavailable!");
       
       // Update the requests list
       setPendingRequests(pendingRequests.filter(req => req.id !== selectedRequest.id));
@@ -363,14 +255,14 @@ export default function PendingReservations() {
 
       {/* Vehicle Rental Requests Table */}
       <div className="reservation-requests">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'left', gap: '10px', marginBottom: '20px' }}>
           <MdAssignmentInd style={{ color: '#00A8A8', fontSize: '28px' }} />
           <p style={{ fontSize: "1.75rem", fontWeight: "500", margin: 0 }}>
             Vehicle Rental Requests with Driver
           </p>
         </div>
         
-        <div style={{ height: "65vh", overflowY: "auto" }}>
+        <div style={{ height: "75vh", overflowY: "auto" }}>
           <Table hover={true} style={{ fontSize: "1.10rem"}}>
             <TableRow data={[
               "Customer", 
@@ -378,6 +270,7 @@ export default function PendingReservations() {
               "Date Range", 
               "Duration",
               "Amount",
+              "Vehicle Status",
               "Actions"
             ]} />
             {pendingRequests.map((request) => (
@@ -404,12 +297,43 @@ export default function PendingReservations() {
                   <div className="amount-cell">
                     {request.totalAmount}
                   </div>,
+                  <div className="availability-cell">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ 
+                        color: request.vehicleAvailable ? '#10B981' : '#EF4444',
+                        fontWeight: 'bold',
+                        fontSize: '12px'
+                      }}>
+                        {request.vehicleAvailable ? 'Available' : 'Unavailable'}
+                      </span>
+                      <button
+                        onClick={() => toggleVehicleAvailability(request.vehicleId, request.vehicleAvailable)}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          cursor: 'pointer',
+                          color: request.vehicleAvailable ? '#10B981' : '#6B7280',
+                          fontSize: '18px',
+                          padding: '2px'
+                        }}
+                        title={`Click to ${request.vehicleAvailable ? 'disable' : 'enable'} vehicle`}
+                      >
+                        {request.vehicleAvailable ? <FaToggleOn /> : <FaToggleOff />}
+                      </button>
+                    </div>
+                  </div>,
                   <div className="actions-cell" >
                     <Button
                       type="button"
                       value="Assign Driver"
-                      style={{ width: "100px", fontSize: "12px", marginBottom: "5px" }}
+                      style={{ 
+                        width: "100px", 
+                        fontSize: "12px", 
+                        marginBottom: "5px",
+                        opacity: request.vehicleAvailable ? 1 : 0.5
+                      }}
                       onClick={() => openAssignModal(request)}
+                      disabled={!request.vehicleAvailable}
                     />
                     <Button
                       type="button"
@@ -460,13 +384,27 @@ export default function PendingReservations() {
                 <p><strong>Vehicle:</strong> {selectedRequest.vehicleName}</p>
                 <p><strong>Type:</strong> {selectedRequest.vehicleType}</p>
                 <p><strong>Amount:</strong> {selectedRequest.totalAmount}</p>
-              </div>
-              
-              <div>
-                <h4 style={{ color: '#00A8A8', margin: '0 0 5px 0' }}>Trip Details</h4>
-                <p><strong>Pickup:</strong> {selectedRequest.pickupLocation}</p>
-                <p><strong>Drop-off:</strong> {selectedRequest.dropoffLocation}</p>
-                <p><strong>Duration:</strong> {selectedRequest.duration}</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
+                  <strong>Status:</strong>
+                  <span style={{ 
+                    color: selectedRequest.vehicleAvailable ? '#10B981' : '#EF4444',
+                    fontWeight: 'bold'
+                  }}>
+                    {selectedRequest.vehicleAvailable ? 'Available' : 'Unavailable'}
+                  </span>
+                  <button
+                    onClick={() => toggleVehicleAvailability(selectedRequest.vehicleId, selectedRequest.vehicleAvailable)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      color: selectedRequest.vehicleAvailable ? '#10B981' : '#6B7280',
+                      fontSize: '18px'
+                    }}
+                  >
+                    {selectedRequest.vehicleAvailable ? <FaToggleOn /> : <FaToggleOff />}
+                  </button>
+                </div>
               </div>
               
               <div>
@@ -477,12 +415,30 @@ export default function PendingReservations() {
               </div>
             </div>
 
+            {!selectedRequest.vehicleAvailable && (
+              <div style={{
+                backgroundColor: '#FEF2F2',
+                border: '1px solid #FECACA',
+                borderRadius: '8px',
+                padding: '12px',
+                marginBottom: '20px'
+              }}>
+                <p style={{ color: '#EF4444', margin: 0, fontSize: '14px' }}>
+                  ⚠️ This vehicle is currently unavailable. Enable it to proceed with the reservation.
+                </p>
+              </div>
+            )}
+
             <div style={{ marginTop: "25px", display: "flex", gap: "15px", justifyContent: "center" }}>
               <Button 
                 value="Assign Driver" 
                 type="button" 
                 onClick={() => setIsAssignModalOpen(true)} 
-                style={{ minWidth: "120px" }}
+                style={{ 
+                  minWidth: "120px",
+                  opacity: selectedRequest.vehicleAvailable ? 1 : 0.5
+                }}
+                disabled={!selectedRequest.vehicleAvailable}
               />
               <Button 
                 value="Reject Request" 

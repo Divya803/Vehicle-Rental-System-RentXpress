@@ -43,7 +43,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
   height: 60px;
   gap: 2px;
 }
@@ -420,3 +419,4 @@
 .vehicle-requests::-webkit-scrollbar-thumb:hover {
   background: #007A7A;
 }
+

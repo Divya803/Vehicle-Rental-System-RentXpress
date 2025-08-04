@@ -25,6 +25,10 @@ module.exports = new EntitySchema({
             type: "boolean",
             default: false,
         },
+        status: {
+            type: "varchar",
+            default: "Pending"
+        },
     },
     relations: {
         user: {
