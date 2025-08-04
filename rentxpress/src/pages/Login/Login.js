@@ -24,6 +24,7 @@ const Login = () => {
     if (res.ok) {
       localStorage.setItem("token", data.token);
       localStorage.setItem("userRole", data.role);
+      localStorage.setItem("userId", data.userId);
 
       alert("Login successful!");
 

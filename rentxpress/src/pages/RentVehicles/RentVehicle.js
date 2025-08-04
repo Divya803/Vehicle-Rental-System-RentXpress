@@ -43,7 +43,58 @@ const RentVehicle = () => {
     }
   }, [pickupDate, endDate]);
 
+  // const handleConfirmRental = async () => {
+  //   try {
+  //     const userId = localStorage.getItem("userId"); // or from context/auth
+  //     const totalAmount = duration * (rentalType === "With Driver" ? vehicle?.withDriverPrice : vehicle?.price);
 
+  //     await axios.post("http://localhost:5000/api/reservation/createReservation", {
+  //       userId,
+  //       vehicleId: vehicle.vehicleId,
+  //       startDate: pickupDate,
+  //       endDate: endDate,
+  //       totalAmount,
+  //       reservationType: rentalType
+  //     });
+
+  //     alert("Reservation successful!");
+  //     setIsModalOpen(false);
+  //   } catch (error) {
+  //     console.error("Reservation failed", error);
+  //     alert("Failed to make reservation");
+  //   }
+  // };
+
+  const handleConfirmRental = async () => {
+  try {
+    const userId = parseInt(localStorage.getItem("userId")); // Parse as integer
+    const totalAmount = duration * (rentalType === "With Driver" ? vehicle?.withDriverPrice : vehicle?.price);
+
+    // Add debugging logs
+    console.log("User ID from localStorage:", localStorage.getItem("userId"));
+    console.log("Parsed User ID:", userId);
+    console.log("Vehicle ID:", vehicle.vehicleId);
+
+    const requestData = {
+      userId,
+      vehicleId: vehicle.vehicleId,
+      startDate: pickupDate,
+      endDate: endDate,
+      totalAmount,
+      reservationType: rentalType
+    };
+
+    console.log("Request data:", requestData);
+
+    await axios.post("http://localhost:5000/api/reservation/createReservation", requestData);
+
+    alert("Reservation successful!");
+    setIsModalOpen(false);
+  } catch (error) {
+    console.error("Reservation failed", error);
+    alert("Failed to make reservation");
+  }
+};
 
   return (
     <div className="container">
@@ -99,8 +150,6 @@ const RentVehicle = () => {
       {/* Modal */}
       <Modal open={isModalOpen} close={setIsModalOpen}>
         <h2><center>{rentalType} Rental</center></h2>
-        {/* <p> Duration: 3 days</p>
-       <p> Total payment: LKR {rentalType === "With Driver" ? vehicle?.withDriverPrice : vehicle?.price}</p> */}
         <p>Duration: {duration} {duration === 1 ? "day" : "days"}</p>
         <p>
           Total payment: LKR{" "}
@@ -110,7 +159,10 @@ const RentVehicle = () => {
         </p>
         <p>Confirm your rental details for the {rentalType} option.</p>
         <div className="modal-buttons">
-          <Button value="Confirm" onClick={() => setIsModalOpen(false)} style={{ width: "100px" }} />
+          <Button value="Confirm" onClick={() => {
+            setIsModalOpen(false);
+            handleConfirmRental();
+          }} style={{ width: "100px" }} />
           <Button value="Cancel" onClick={() => setIsModalOpen(false)} red style={{ width: "100px" }} />
         </div>
       </Modal>
