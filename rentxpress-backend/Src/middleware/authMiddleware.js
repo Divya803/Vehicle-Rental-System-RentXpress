@@ -38,6 +38,7 @@ const verifyToken = (req, res, next) => {
 
       req.user = user;
       console.log("✅ Token verified:", user); // Check if user.id exists
+      req.user = user;
       next();
     });
   } catch (error) {

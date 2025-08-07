@@ -1,5 +1,8 @@
 const AppDataSource = require("../config/config");
 const Vehicle = require("../models/vehicle");
+const Reservation = require("../models/reservation");
+const User = require("../models/user");
+const ReservationDriverLog = require("../models/reservationDriverLog");
 
 const postVehicle = async (req, res) => {
   try {
@@ -159,6 +162,48 @@ const getPendingReservations = async (req, res) => {
   }
 };
 
+const getConfirmedReservations = async (req, res) => {
+  try {
+    const reservationRepo = AppDataSource.getRepository("Reservation");
+    const reservations = await reservationRepo.find({
+      where: {
+        isCancelled: false,
+        status: "Confirmed" // Get confirmed reservations
+      },
+      relations: ["user", "vehicle"]
+    });
+
+    const enrichedReservations = reservations.map(reservation => {
+      const startDate = new Date(reservation.startDate);
+      const endDate = new Date(reservation.endDate);
+      const timeDiff = Math.abs(endDate - startDate);
+      const durationDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); // duration in days
+
+      return {
+        id: reservation.reservationId,
+        customerName: reservation.user?.firstName + " " + reservation.user?.lastName,
+        customerPhone: reservation.user?.phoneNo,
+        customerEmail: reservation.user?.email,
+        vehicleId: reservation.vehicle?.vehicleId,
+        vehicleName: reservation.vehicle?.vehicleName,
+        vehicleType: reservation.vehicle?.category,
+        vehicleAvailable: reservation.vehicle?.isAvailable,
+        startDate: reservation.startDate,
+        endDate: reservation.endDate,
+        totalAmount: reservation.totalAmount,
+        duration: `${durationDays} day${durationDays > 1 ? 's' : ''}`,
+        requestDate: reservation.createdAt || reservation.startDate, // fallback
+        status: reservation.status
+      };
+    });
+
+    res.status(200).json(enrichedReservations);
+  } catch (error) {
+    console.error("Error fetching confirmed reservations without driver:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 const toggleVehicleAvailability = async (req, res) => {
   try {
     const { vehicleId } = req.params;
@@ -192,6 +237,106 @@ const toggleVehicleAvailability = async (req, res) => {
   }
 };
 
+const getPendingVehicles = async (req, res) => {
+  try {
+    const vehicleRepo = AppDataSource.getRepository(Vehicle);
+    const vehicles = await vehicleRepo.find({
+      where: { status: "pending" },
+      relations: ["user"],
+    });
+
+    const mapped = vehicles.map((v) => ({
+      id: v.vehicleId,
+      name: v.vehicleName,
+      price: v.price,
+      category: v.category,
+      description: v.description,
+      status: v.status,
+      image: v.image,
+      ownerName: v.user?.name || "Unknown",
+      ownerPhone: v.user?.phone || "N/A",
+      documents: [], // handle documents if implemented
+    }));
+
+    res.json(mapped);
+  } catch (error) {
+    console.error("Error fetching pending vehicles:", error);
+    res.status(500).json({ error: "Failed to fetch vehicles" });
+  }
+};
+
+const getMyBookings = async (req, res) => {
+  try {
+    const userId = req.user.id; // still correct here
+
+    const reservationRepo = AppDataSource.getRepository(Reservation);
+
+    const bookings = await reservationRepo.find({
+      where: { user: { userId } }, // 🔥 the key fix
+      relations: ["vehicle"],
+      order: { startDate: "DESC" },
+    });
+
+    res.status(200).json(bookings);
+  } catch (error) {
+    console.error("Error in getMyBookings:", error);
+    res.status(500).json({ message: "Failed to fetch bookings" });
+  }
+};
+
+const getAvailableDrivers = async (req, res) => {
+  try {
+    const userRepository = AppDataSource.getRepository("User");
+
+    const drivers = await userRepository.find({
+      where: {
+        role: "Driver",
+        isAvailable: true,
+      },
+      select: ["userId", "firstName", "lastName", "email", "phoneNo"], // select only needed fields
+    });
+
+    res.json(drivers);
+  } catch (error) {
+    console.error("Error fetching available drivers:", error);
+    res.status(500).json({ message: "Failed to fetch available drivers" });
+  }
+};
+
+const assignDriver = async (req, res) => {
+  const { reservationId, driverId } = req.body;
+
+  try {
+    const reservationRepo = AppDataSource.getRepository(Reservation);
+    const driverRepo = AppDataSource.getRepository(User);
+    const logRepo = AppDataSource.getRepository(ReservationDriverLog);
+
+    const reservation = await reservationRepo.findOneBy({ reservationId });
+    if (!reservation) {
+      return res.status(404).json({ message: "Reservation not found." });
+    }
+
+    const driver = await driverRepo.findOneBy({ userId: driverId });
+    if (!driver || driver.role !== "Driver") {
+      return res.status(400).json({ message: "Invalid driver selected." });
+    }
+
+    const log = logRepo.create({
+      reservation,
+      driver,
+      status: "Pending" // or "Requested", your choice
+    });
+    await logRepo.save(log);
+
+    return res.status(200).json({ message: "Driver assignment request sent successfully." });
+
+  } catch (error) {
+    console.error("Assign driver error:", error);
+    return res.status(500).json({ message: "Internal server error." });
+  }
+};
+
+
 
 module.exports = {
   postVehicle,
@@ -199,5 +344,10 @@ module.exports = {
   getVehicleById,
   createReservation,
   getPendingReservations,
-  toggleVehicleAvailability
+  getConfirmedReservations,
+  toggleVehicleAvailability,
+  getPendingVehicles,
+  getMyBookings,
+  getAvailableDrivers,
+  assignDriver
 };

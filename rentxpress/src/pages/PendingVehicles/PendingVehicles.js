@@ -25,7 +25,7 @@ export default function AdminVehicleApproval() {
 
   const fetchPendingVehicles = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/admin/vehicles/pending", {
+      const res = await axios.get("http://localhost:5000/api/reservation/vehicles/pending", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

@@ -307,6 +307,74 @@ const getVerificationIssues = async (req, res) => {
   }
 };
 
+// const getMyVerificationStatus = async (req, res) => {
+//   try {
+//     // Add defensive checks
+//     if (!req.user) {
+//       console.log("❌ req.user is undefined");
+//       return res.status(401).json({ error: "User not authenticated" });
+//     }
+
+//     const userId = req.user.id;
+//     console.log("📍 Checking verification status for user:", userId);
+    
+//     if (!userId) {
+//       console.log("❌ User ID is undefined");
+//       return res.status(401).json({ error: "Invalid user ID" });
+//     }
+
+//     const verificationRepo = AppDataSource.getRepository("VerificationRequest");
+    
+//     // Fix the query - use 'userId' in the user relation
+//     const status = await verificationRepo.findOne({ 
+//       where: { user: { userId: userId } },
+//       relations: ["user"]
+//     });
+
+//     if (!status) {
+//       return res.status(200).json({ 
+//         message: "No verification request found",
+//         status: "not_submitted",
+//         role: req.user.role 
+//       });
+//     }
+
+//     // Transform the response to match frontend expectations
+//     const response = {
+//       status: status.status,
+//       role: status.role || req.user.role,
+//       submittedAt: status.submittedAt || status.createdAt,
+//       rejectionReason: status.issueDetails || status.rejectionReason, // Use issueDetails from schema
+//       ...status // Include any other fields
+//     };
+
+//     res.json(response);
+//   } catch (err) {
+//     console.error("❌ Error in getMyVerificationStatus:", err);
+//     res.status(500).json({ error: "Failed to fetch verification status", details: err.message });
+//   }
+// };
+
+const getMyVerificationStatus = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const repo = AppDataSource.getRepository(VerificationRequest);
+    const latestRequest = await repo.findOne({
+      where: { user: { userId } },
+      order: { verifyId: "DESC" },
+    });
+
+    if (!latestRequest) {
+      return res.status(404).json({ message: "No verification request found" });
+    }
+
+    return res.status(200).json(latestRequest);
+  } catch (error) {
+    console.error("Error fetching verification status:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 module.exports = {
   createUser,
@@ -319,5 +387,6 @@ module.exports = {
   approveVerification,
   getUserCountsByRole,
   rejectVerification,
-  getVerificationIssues
+  getVerificationIssues,
+  getMyVerificationStatus
 };

@@ -167,7 +167,7 @@ const NavigationBar = ({ isLoggedIn = false }) => {
           )}
 
 
-          {userRole === "VehicleOwner" && (
+          {userRole === "Vehicle Owner" && (
             <li><Link to="/post-vehicle" className="nav-link">Postings</Link></li>
           )}
 

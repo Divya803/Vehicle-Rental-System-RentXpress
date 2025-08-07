@@ -41,6 +41,10 @@ module.exports = new EntitySchema({
       type: "text", // stores detailed issue information
       nullable: true, // can be null if no issues
     },
+    createdAt: {
+      type: "timestamp",
+      createDate: true,
+    },
   },
   relations: {
     user: {
