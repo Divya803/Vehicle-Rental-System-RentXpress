@@ -616,11 +616,7 @@ const DriverDashboard = () => {
       <NavigationBar />
       <div className="welcome-section">
         <h1>Good day, Driver {driverInfo.firstName || 'User'}!</h1>
-        <p>Manage your rides and track your earnings</p>
-        <div className="earnings-display">
-          <FaMoneyBillWave style={{ marginRight: '10px' }} />
-          Today's Earnings: <span className="earnings-amount">${todayEarnings.toFixed(2)}</span>
-        </div>
+        <p>Manage your rides</p>
       </div>
 
       <div style={{ display: "flex", gap: "20px", padding: "0 50px" }}>

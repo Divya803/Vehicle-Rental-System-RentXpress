@@ -37,6 +37,10 @@ module.exports = new EntitySchema({
       length: 50,
       default: "user",
     },
+    isAvailable: {
+      type: "boolean",
+      default: true,
+    },
     nic: {
       type: "varchar",
       length: 20,

@@ -2,7 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const verifyToken = require('../middleware/authMiddleware');
 const { createUser, getUsers, deleteUser, submitVerification, getProfile, deleteUserProfile, 
-  getPendingVerifications, approveVerification,getUserCountsByRole, rejectVerification, getVerificationIssues} = require("../controllers/userController");
+  getPendingVerifications, approveVerification,getUserCountsByRole, rejectVerification, getVerificationIssues, getMyVerificationStatus} = require("../controllers/userController");
 const { login } = require('../controllers/authController');
 
 const router = express.Router();
@@ -34,6 +34,7 @@ router.patch("/verify/:id/approve", verifyToken, approveVerification);
 router.get("/counts", getUserCountsByRole);
 router.patch("/verify/:id/reject", verifyToken, rejectVerification);
 router.get("/verify/issues", verifyToken, getVerificationIssues);
+router.get("/myVerificationStatus", verifyToken, getMyVerificationStatus);
 
 
 module.exports = router;
