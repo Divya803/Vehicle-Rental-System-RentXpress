@@ -2,6 +2,9 @@ const AppDataSource = require("../config/config");
 const User = require("../models/user");
 const VerificationRequest = require("../models/verificationRequest");
 const { getRepository } = require("typeorm");
+const path = require('path');
+const fs = require('fs');
+const mime = require('mime-types');
 
 
 const userRepository = AppDataSource.getRepository("User");
@@ -87,15 +90,60 @@ const deleteUser = async (req, res) => {
 //   }
 // };
 
+// const submitVerification = async (req, res) => {
+//   try {
+//     const { firstName, lastName, age, phoneNo, nic, dateOfBirth, role } = req.body;
+
+//     // Access file
+//     // const identification = req.file ? `/uploads/${req.file.filename}` : null;
+//     const identificationPaths = req.files.map(file => `/uploads/${file.filename}`);
+
+//     const userId = req.user.id; // ✅ Use token's user ID
+
+//     const verificationRequest = verificationRepo.create({
+//       firstName,
+//       lastName,
+//       age,
+//       phoneNo,
+//       nic,
+//       dateOfBirth,
+//       role,
+//       identification: JSON.stringify(identificationPaths),
+//       status: "pending",
+//       user: { userId }, // ✅ Link to correct user
+//     });
+
+//     await verificationRepo.save(verificationRequest);
+
+//     res.status(201).json({ message: "Verification submitted successfully" });
+//   } catch (error) {
+//     console.error("Submit verification error:", error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
+
 const submitVerification = async (req, res) => {
   try {
     const { firstName, lastName, age, phoneNo, nic, dateOfBirth, role } = req.body;
 
-    // Access file
-    // const identification = req.file ? `/uploads/${req.file.filename}` : null;
-    const identificationPaths = req.files.map(file => `/uploads/${file.filename}`);
+    const userId = req.user.id; // Use token's user ID
 
-    const userId = req.user.id; // ✅ Use token's user ID
+    // Handle different file types based on role
+    const documentPaths = {};
+    
+    // NIC document is required for all roles
+    if (req.files.nicDocument && req.files.nicDocument[0]) {
+      documentPaths.nicDocument = `/uploads/${req.files.nicDocument[0].filename}`;
+    }
+
+    // Role-specific documents
+    if (role === "Driver" && req.files.licenseDocument && req.files.licenseDocument[0]) {
+      documentPaths.licenseDocument = `/uploads/${req.files.licenseDocument[0].filename}`;
+    }
+
+    if (role === "Vehicle Owner" && req.files.vehicleRegistration && req.files.vehicleRegistration[0]) {
+      documentPaths.vehicleRegistration = `/uploads/${req.files.vehicleRegistration[0].filename}`;
+    }
 
     const verificationRequest = verificationRepo.create({
       firstName,
@@ -105,20 +153,22 @@ const submitVerification = async (req, res) => {
       nic,
       dateOfBirth,
       role,
-      identification: JSON.stringify(identificationPaths),
+      identification: JSON.stringify(documentPaths), // Store all document paths
       status: "pending",
-      user: { userId }, // ✅ Link to correct user
+      user: { userId },
     });
 
     await verificationRepo.save(verificationRequest);
 
-    res.status(201).json({ message: "Verification submitted successfully" });
+    res.status(201).json({ 
+      message: "Verification submitted successfully",
+      documents: Object.keys(documentPaths)
+    });
   } catch (error) {
     console.error("Submit verification error:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
-
 
 const getProfile = async (req, res) => {
   try {
@@ -376,6 +426,51 @@ const getMyVerificationStatus = async (req, res) => {
   }
 };
 
+// const downloadFile = (req, res) => {
+//   const filename = req.params.filename;
+//   const filePath = path.join(__dirname, "../uploads", filename); // "../uploads" since uploads folder is usually outside controllers
+
+//   res.download(filePath, (err) => {
+//     if (err) {
+//       console.error("Download error:", err);
+//       res.status(404).json({ message: "File not found" });
+//     }
+//   });
+// };
+
+const downloadFile = (req, res) => {
+  const filename = req.params.filename;
+  const filePath = path.join(__dirname, "../../uploads", filename); // Adjust path as needed
+
+  // Check if file exists
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ message: "File not found" });
+  }
+
+  // Get the MIME type
+  const mimeType = mime.lookup(filePath) || 'application/octet-stream';
+  
+  // Set proper headers
+  res.setHeader('Content-Type', mimeType);
+  res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
+  
+  // For security, you might want to add authentication check here
+  // const token = req.headers.authorization?.replace('Bearer ', '') || req.query.token;
+  // if (!token) {
+  //   return res.status(401).json({ message: "Unauthorized" });
+  // }
+
+  // Send the file
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      console.error("File send error:", err);
+      if (!res.headersSent) {
+        res.status(500).json({ message: "Error sending file" });
+      }
+    }
+  });
+};
+
 module.exports = {
   createUser,
   getUsers,
@@ -388,5 +483,6 @@ module.exports = {
   getUserCountsByRole,
   rejectVerification,
   getVerificationIssues,
-  getMyVerificationStatus
+  getMyVerificationStatus,
+  downloadFile
 };

@@ -21,7 +21,6 @@ const DriverDashboard = () => {
   const [confirmedRides, setConfirmedRides] = useState([]);
   const [loading, setLoading] = useState(true);
   const [driverInfo, setDriverInfo] = useState({});
-  const [todayEarnings, setTodayEarnings] = useState(0);
   const [isAvailable, setIsAvailable] = useState(true);
   const [updatingAvailability, setUpdatingAvailability] = useState(false);
   
