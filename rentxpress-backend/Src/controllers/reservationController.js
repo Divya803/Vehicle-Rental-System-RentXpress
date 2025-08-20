@@ -130,7 +130,8 @@ const getPendingReservations = async (req, res) => {
       where: {
         reservationType: "With Driver",
         isCancelled: false,
-        driver: null
+        driver: null,
+        status: "Pending"
       },
       relations: ["user", "vehicle"]
     });
@@ -306,6 +307,39 @@ const getAvailableDrivers = async (req, res) => {
   }
 };
 
+// const assignDriver = async (req, res) => {
+//   const { reservationId, driverId } = req.body;
+
+//   try {
+//     const reservationRepo = AppDataSource.getRepository(Reservation);
+//     const driverRepo = AppDataSource.getRepository(User);
+//     const logRepo = AppDataSource.getRepository(ReservationDriverLog);
+
+//     const reservation = await reservationRepo.findOneBy({ reservationId });
+//     if (!reservation) {
+//       return res.status(404).json({ message: "Reservation not found." });
+//     }
+
+//     const driver = await driverRepo.findOneBy({ userId: driverId });
+//     if (!driver || driver.role !== "Driver") {
+//       return res.status(400).json({ message: "Invalid driver selected." });
+//     }
+
+//     const log = logRepo.create({
+//       reservation,
+//       driver,
+//       status: "Pending" // or "Requested", your choice
+//     });
+//     await logRepo.save(log);
+
+//     return res.status(200).json({ message: "Driver assignment request sent successfully." });
+
+//   } catch (error) {
+//     console.error("Assign driver error:", error);
+//     return res.status(500).json({ message: "Internal server error." });
+//   }
+// };
+
 const assignDriver = async (req, res) => {
   const { reservationId, driverId } = req.body;
 
@@ -324,20 +358,27 @@ const assignDriver = async (req, res) => {
       return res.status(400).json({ message: "Invalid driver selected." });
     }
 
+    // Update reservation status
+    reservation.status = "Requested"; // mark as requested
+    await reservationRepo.save(reservation); // persist change
+
+    // Create log
     const log = logRepo.create({
       reservation,
       driver,
-      status: "Pending" // or "Requested", your choice
+      status: "Pending" // driver hasn't confirmed yet
     });
     await logRepo.save(log);
 
-    return res.status(200).json({ message: "Driver assignment request sent successfully." });
+    return res.status(200).json({ message: "Driver requested successfully" });
 
   } catch (error) {
     console.error("Assign driver error:", error);
     return res.status(500).json({ message: "Internal server error." });
   }
 };
+
+
 
 const getAssignedRides = async (req, res) => {
   try {
@@ -509,12 +550,51 @@ const acceptRide = async (req, res) => {
   }
 };
 
+// const rejectRide = async (req, res) => {
+//   const { reservationId } = req.body;
+//   const driverId = req.user.id;
+
+//   try {
+//     const logRepo = AppDataSource.getRepository("ReservationDriverLog");
+
+//     // Find the driver log entry for this reservation and driver
+//     const driverLog = await logRepo.findOne({
+//       where: { 
+//         reservation: { reservationId: parseInt(reservationId) },
+//         driver: { userId: driverId },
+//         status: "Pending"
+//       }
+//     });
+
+//     if (!driverLog) {
+//       return res.status(404).json({ error: "No pending assignment found for this ride" });
+//     }
+
+//     // Update the log status to "Rejected"
+//     await logRepo.update(
+//       { logId: driverLog.logId },
+//       { status: "Rejected" }
+//     );
+
+//     res.status(200).json({ 
+//       message: "Ride rejected successfully",
+//       reservationId: parseInt(reservationId)
+//     });
+
+//   } catch (error) {
+//     console.error("Error rejecting ride:", error);
+//     res.status(500).json({ error: "Failed to reject ride" });
+//   }
+// };
+
 const rejectRide = async (req, res) => {
   const { reservationId } = req.body;
   const driverId = req.user.id;
 
   try {
     const logRepo = AppDataSource.getRepository("ReservationDriverLog");
+    const reservationRepo = AppDataSource.getRepository("Reservation");
+    const userRepo = AppDataSource.getRepository("User");
 
     // Find the driver log entry for this reservation and driver
     const driverLog = await logRepo.findOne({
@@ -522,12 +602,17 @@ const rejectRide = async (req, res) => {
         reservation: { reservationId: parseInt(reservationId) },
         driver: { userId: driverId },
         status: "Pending"
-      }
+      },
+      relations: ["driver", "reservation"]
     });
 
     if (!driverLog) {
       return res.status(404).json({ error: "No pending assignment found for this ride" });
     }
+
+    // Get driver details for the response message
+    const driver = await userRepo.findOneBy({ userId: driverId });
+    const driverName = `${driver.firstName} ${driver.lastName}`;
 
     // Update the log status to "Rejected"
     await logRepo.update(
@@ -535,9 +620,16 @@ const rejectRide = async (req, res) => {
       { status: "Rejected" }
     );
 
+    // Update reservation status back to "Pending" 
+    await reservationRepo.update(
+      { reservationId: parseInt(reservationId) },
+      { status: "Pending" }
+    );
+
     res.status(200).json({ 
-      message: "Ride rejected successfully",
-      reservationId: parseInt(reservationId)
+      message: `${driverName} rejected the request`,
+      reservationId: parseInt(reservationId),
+      driverName: driverName
     });
 
   } catch (error) {
@@ -584,6 +676,8 @@ const getConfirmedRidesForDriver = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch confirmed rides" });
   }
 };
+
+
 
 
 module.exports = {
