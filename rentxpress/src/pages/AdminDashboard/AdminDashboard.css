@@ -16,7 +16,8 @@
   .requests {
     color: #ffffff;
     background-color: #161D20;
-    width: 589px;
+    /* width: 589px; */
+    width: 736px;
     height: 686px;
     margin-top: 10px;
     margin-left: 50px;
@@ -30,7 +31,8 @@
   .issues {
     color: #ffffff;
     background-color: #161D20;
-    width: 736px;
+    /* width: 736px; */
+    width: 589px;
     height: 686px;
     margin-top: 10px;
     margin-left: 20px;
