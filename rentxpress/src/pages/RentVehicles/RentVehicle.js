@@ -197,7 +197,7 @@ const RentVehicle = () => {
   useEffect(() => {
     const fetchVehicle = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/reservation/vehicles/${vehicleId}`);
+        const res = await axios.get(`http://localhost:5000/api/vehicles/vehicles/${vehicleId}`);
         setVehicle(res.data);
       } catch (err) {
         console.error("Failed to fetch vehicle", err);

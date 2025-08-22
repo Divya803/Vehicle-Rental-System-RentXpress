@@ -43,6 +43,7 @@ const dotenv = require("dotenv");
 const dataSource = require("./Src/config/config");
 const userRoutes = require("./Src/routes/userRoutes");
 const reservationRoutes = require("./Src/routes/reservationRoutes");
+const vehicleRoutes = require("./Src/routes/vehicleRoutes");
 const path = require("path");
 const mime = require('mime-types');
 
@@ -70,6 +71,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/users", userRoutes);
 app.use("/api/reservation", reservationRoutes);
+app.use("/api/vehicles", vehicleRoutes);
 
 // Start Server
 app.listen(PORT, () => {

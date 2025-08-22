@@ -24,7 +24,9 @@ export default function PendingReservations() {
   const [selectedDriver, setSelectedDriver] = useState("");
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-  
+  const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
+
+
   const navigate = useNavigate();
 
   // Fetch data
@@ -47,12 +49,7 @@ export default function PendingReservations() {
         });
         setConfirmedRequests(confirmedResponse.data);
 
-        // Optional stats
-        setVehicleCounts({
-          pending: pendingResponse.data.length,
-          approved: confirmedResponse.data.length,
-          rejected: 0
-        });
+       fetchReservationCounts(); 
       } catch (error) {
         console.error("Error fetching reservations:", error);
       }
@@ -60,6 +57,20 @@ export default function PendingReservations() {
 
     fetchData();
   }, []);
+
+  const fetchReservationCounts = async () => {
+  try {
+    const res = await axios.get("http://localhost:5000/api/reservation/counts", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    setVehicleCounts(res.data); // now backend decides pending, approved, rejected
+  } catch (error) {
+    console.error("Error fetching reservation counts:", error);
+  }
+};
+
 
   useEffect(() => {
     const fetchAvailableDrivers = async () => {
@@ -87,7 +98,7 @@ export default function PendingReservations() {
   const toggleVehicleAvailability = async (vehicleId, currentStatus) => {
     try {
       const response = await axios.patch(
-        `http://localhost:5000/api/reservation/vehicles/${vehicleId}/availability`,
+        `http://localhost:5000/api/vehicles/vehicles/${vehicleId}/availability`,
         { isAvailable: !currentStatus },
         {
           headers: {
@@ -119,49 +130,74 @@ export default function PendingReservations() {
   };
 
   const handleAssignDriver = async () => {
-  try {
-    const response = await axios.post(
-      "http://localhost:5000/api/reservation/assign-driver",
-      {
-        reservationId: selectedRequest.reservationId,
-        driverId: selectedDriver
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/reservation/assign-driver",
+        {
+          reservationId: selectedRequest.reservationId,
+          driverId: selectedDriver
         },
-      }
-    );
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
 
-    alert(response.data.message);
+      alert(response.data.message);
 
-    // Refresh data
-    setIsAssignModalOpen(false);
-    setIsDetailsModalOpen(false);
+      // Refresh data
+      setIsAssignModalOpen(false);
+      setIsDetailsModalOpen(false);
 
-    // Re-fetch reservations
-    const pendingRes = await axios.get("http://localhost:5000/api/reservation/pending", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-    setPendingRequests(pendingRes.data);
+      // Re-fetch reservations
+      const pendingRes = await axios.get("http://localhost:5000/api/reservation/pending", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      setPendingRequests(pendingRes.data);
 
-    const confirmedRes = await axios.get("http://localhost:5000/api/reservation/confirmed", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-    setConfirmedRequests(confirmedRes.data);
+      const confirmedRes = await axios.get("http://localhost:5000/api/reservation/confirmed", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      setConfirmedRequests(confirmedRes.data);
 
-  } catch (error) {
-    console.error("Error assigning driver:", error);
-    alert("Failed to assign driver. Please try again.");
-  }
-};
-
-
+    } catch (error) {
+      console.error("Error assigning driver:", error);
+      alert("Failed to assign driver. Please try again.");
+    }
+  };
 
   const openAssignModal = (request) => {
     setSelectedRequest(request);
     setIsDetailsModalOpen(true);
   };
+
+  const handleRejectRequest = async () => {
+    if (!selectedRequest) return;
+    console.log("Selected request:", selectedRequest);
+
+    try {
+      await axios.patch(
+        `http://localhost:5000/api/reservation/${selectedRequest.id}/reject`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      // Remove from pendingRequests
+      setPendingRequests(pendingRequests.filter(r => r.reservationId !== selectedRequest.reservationId));
+
+      setIsRejectModalOpen(false);
+      alert("Reservation rejected successfully!");
+    } catch (error) {
+      console.error("Error rejecting reservation:", error);
+      alert("Failed to reject reservation. Please try again.");
+    }
+  };
+
 
   return (
     <div style={{ backgroundColor: "white", minHeight: "190vh" }}>
@@ -183,8 +219,8 @@ export default function PendingReservations() {
         <AdminCard>
           <div style={{ display: "flex" }}>
             <div>
-              <div className="Dash-card">Approved Rentals</div>
-              <div className="count">{vehicleCounts.approved}</div>
+              <div className="Dash-card">Confirmed Rentals</div>
+              <div className="count">{vehicleCounts.confirmed}</div>
             </div>
             <div className="user-icon">
               <FaCheckCircle />
@@ -346,7 +382,11 @@ export default function PendingReservations() {
                         red
                         outlined
                         style={{ width: "70px", fontSize: "12px" }}
-                        // onClick={() => handleRejectRequest(request.id)}
+                        onClick={() => {
+    setSelectedRequest(request);   // ✅ set the current request
+    setIsRejectModalOpen(true);    // ✅ open modal
+  }}
+
                       />
                     </div>
                   ]}
@@ -388,7 +428,6 @@ export default function PendingReservations() {
                 "Duration",
                 "Amount",
                 "Vehicle Status",
-                "Actions"
               ]} />
               {confirmedRequests.map((request) => (
                 <TableRow
@@ -439,16 +478,6 @@ export default function PendingReservations() {
                         </button>
                       </div>
                     </div>,
-                    <div className="actions-cell" >
-                      <Button
-                        type="button"
-                        value="Reject"
-                        red
-                        outlined
-                        style={{ width: "70px", fontSize: "12px" }}
-                        // onClick={() => handleRejectRequest(request.id)}
-                      />
-                    </div>
                   ]}
                 />
               ))}
@@ -550,7 +579,9 @@ export default function PendingReservations() {
                 type="button"
                 red
                 outlined
-                // onClick={() => handleRejectRequest(selectedRequest.id)}
+                onClick={() => {
+    setIsRejectModalOpen(true);
+  }}
                 style={{ minWidth: "120px" }}
               />
             </div>
@@ -618,17 +649,37 @@ export default function PendingReservations() {
               type="button"
               outlined
               onClick={() => setIsAssignModalOpen(false)}
-              
+
             />
             <Button
               value="Confirm "
               type="button"
               onClick={handleAssignDriver}
-              disabled={!selectedDriver}           
+              disabled={!selectedDriver}
             />
           </div>
         </div>
       </Modal>
+      <Modal open={isRejectModalOpen} close={() => setIsRejectModalOpen(false)} footer={false}>
+        <div style={{ padding: "20px", textAlign: "center" }}>
+          <h3 style={{ color: '#161D20', marginBottom: '20px' }}>Are you sure you want to reject this reservation?</h3>
+          <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
+            <Button
+              value="Cancel"
+              type="button"
+              outlined
+              onClick={() => setIsRejectModalOpen(false)}
+            />
+            <Button
+              value="Confirm Reject"
+              type="button"
+              red
+              onClick={handleRejectRequest}
+            />
+          </div>
+        </div>
+      </Modal>
+
     </div>
   );
 }

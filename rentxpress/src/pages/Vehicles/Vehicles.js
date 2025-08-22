@@ -76,7 +76,7 @@ const Vehicles = () => {
   useEffect(() => {
     const fetchVehicles = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/reservation/");
+        const response = await axios.get("http://localhost:5000/api/vehicles/");
         setVehicles(response.data);
       } catch (error) {
         console.error("Failed to fetch vehicles", error);
