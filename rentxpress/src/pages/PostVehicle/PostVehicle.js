@@ -2,6 +2,7 @@
 // import "./PostVehicle.css";
 // import Button from "../../components/Button/Button";
 // import NavigationBar from "../../components/NavigationBar/NavigationBar";
+// import { message } from "antd";
 
 // const PostVehicle = () => {
 //   const [formData, setFormData] = useState({
@@ -12,52 +13,53 @@
 //     description: "",
 //   });
 
+//   const [messageApi, contextHolder] = message.useMessage();
+
 //   const handleChange = (e) => {
 //     setFormData({ ...formData, [e.target.name]: e.target.value });
 //   };
 
 //   const handleSubmit = async (e) => {
-//   e.preventDefault();
+//     e.preventDefault();
 
-//   try {
-//     const userId = 6; // Replace with dynamic user ID (e.g., from logged-in user context)
-//     const response = await fetch("http://localhost:5000/api/reservation/postVehicle", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({ ...formData, userId }),
-//     });
-
-//     const data = await response.json();
-
-//     if (response.ok) {
-//       alert("Vehicle posted successfully!");
-//       console.log(data.vehicle);
-//       // Optionally reset form
-//       setFormData({
-//         name: "",
-//         price: "",
-//         image: "",
-//         category: "",
-//         description: "",
+//     try {
+//       const userId = 6; // Replace with dynamic user ID
+//       const response = await fetch("http://localhost:5000/api/reservation/postVehicle", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({ ...formData, userId }),
 //       });
-//     } else {
-//       alert("Failed to post vehicle: " + data.error);
-//     }
-//   } catch (error) {
-//     console.error("Error posting vehicle:", error);
-//     alert("Something went wrong");
-//   }
-// };
 
+//       const data = await response.json();
+
+//       if (response.ok) {
+//         messageApi.success("Vehicle posted successfully!");
+//         console.log(data.vehicle);
+//         setFormData({
+//           name: "",
+//           price: "",
+//           image: "",
+//           category: "",
+//           description: "",
+//         });
+//       } else {
+//         messageApi.error("Failed to post vehicle: " + data.error);
+//       }
+//     } catch (error) {
+//       console.error("Error posting vehicle:", error);
+//       messageApi.error("Something went wrong");
+//     }
+//   };
 
 //   return (
 //     <div style={{ backgroundColor: "white", minHeight: "100vh" }}>
+//       {contextHolder}
 //       <NavigationBar />
 //       <div className="post-vehicle-container">
 //         <h2 className="post-vehicle-title">Post Vehicle</h2>
-//         <form className="post-vehicle-form">
+//         <form className="post-vehicle-form" >
 //           <div className="post-vehicle-row">
 //             <div className="post-vehicle-group">
 //               <label htmlFor="name">Vehicle Name</label>
@@ -138,7 +140,7 @@
 
 // export default PostVehicle;
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "./PostVehicle.css";
 import Button from "../../components/Button/Button";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
@@ -153,6 +155,8 @@ const PostVehicle = () => {
     description: "",
   });
 
+  const fileInputRef = useRef(null); // Add ref for file input
+
   const [messageApi, contextHolder] = message.useMessage();
 
   const handleChange = (e) => {
@@ -163,20 +167,25 @@ const PostVehicle = () => {
     e.preventDefault();
 
     try {
-      const userId = 6; // Replace with dynamic user ID
+      const userId = localStorage.getItem("userId"); // ✅ dynamic userId
+      const formDataObj = new FormData();
+
+      formDataObj.append("name", formData.name);
+      formDataObj.append("price", formData.price);
+      formDataObj.append("image", formData.image);
+      formDataObj.append("category", formData.category);
+      formDataObj.append("description", formData.description);
+      formDataObj.append("userId", userId);
+
       const response = await fetch("http://localhost:5000/api/reservation/postVehicle", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...formData, userId }),
+        body: formDataObj,
       });
 
       const data = await response.json();
 
       if (response.ok) {
         messageApi.success("Vehicle posted successfully!");
-        console.log(data.vehicle);
         setFormData({
           name: "",
           price: "",
@@ -184,6 +193,10 @@ const PostVehicle = () => {
           category: "",
           description: "",
         });
+        // Reset the file input field
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
       } else {
         messageApi.error("Failed to post vehicle: " + data.error);
       }
@@ -229,17 +242,20 @@ const PostVehicle = () => {
 
           <div className="post-vehicle-row">
             <div className="post-vehicle-group">
-              <label htmlFor="image">Image URL</label>
+              <label htmlFor="image">Upload Image</label>
               <input
-                type="text"
+                ref={fileInputRef} // Add ref here
+                type="file"
                 id="image"
                 name="image"
-                value={formData.image}
-                onChange={handleChange}
-                placeholder="Image URL"
+                accept="image/*"
+                onChange={(e) =>
+                  setFormData({ ...formData, image: e.target.files[0] })
+                }
                 className="post-vehicle-input"
               />
             </div>
+
             <div className="post-vehicle-group">
               <label htmlFor="category">Category</label>
               <input
@@ -279,4 +295,3 @@ const PostVehicle = () => {
 };
 
 export default PostVehicle;
-

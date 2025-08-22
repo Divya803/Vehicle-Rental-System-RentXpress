@@ -128,9 +128,6 @@ const Vehicles = () => {
               <img src={vehicle.image} alt={vehicle.vehicleName} className="vehicle-img" />
               <h3>{vehicle.vehicleName}</h3>
               <p>{vehicle.price}</p>
-              {/* <Link to={`/rent-vehicles/${vehicle.vehicleId}`}>
-  <button className="rent-button">RENT</button>
-</Link> */}
               {vehicle.isAvailable ? (
                 <Link to={`/rent-vehicles/${vehicle.vehicleId}`}>
                   <button className="rent-button">RENT</button>

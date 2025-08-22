@@ -1,12 +1,25 @@
 const express = require("express");
 const router = express.Router();
-// const reservationController = require("../controllers/reservationController");
 const { postVehicle, getAllVehicles, getVehicleById, createReservation, getPendingReservations, getConfirmedReservations, toggleVehicleAvailability,
     getPendingVehicles, getMyBookings, getAvailableDrivers, assignDriver, getAssignedRides,acceptRide,
   rejectRide,getConfirmedRidesForDriver} = require("../controllers/reservationController");
 const verifyToken = require('../middleware/authMiddleware');
+const multer = require("multer");
 
-router.post("/postVehicle", postVehicle);
+// router.post("/postVehicle", postVehicle);
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // save in /uploads folder
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+const upload = multer({ storage });
+
+// Routes
+router.post("/postVehicle", upload.single("image"), postVehicle);
 router.get("/", getAllVehicles);
 router.get("/vehicles/pending",getPendingVehicles);
 router.get("/vehicles/:id", getVehicleById);
