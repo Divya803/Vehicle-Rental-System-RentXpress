@@ -15,6 +15,7 @@ import PendingVehicle from "../pages/PendingVehicles/PendingVehicles";
 import UserDashboard from "../pages/UserDashboard/UserDashboard";
 import DriverDashboard from "../pages/DriverDashboard/DriverDashboard";
 import PendingReservations from "../pages/PendingReservations/PendingReservations";
+import OwnerDashboard from "../pages/OwnerDashboard/OwnerDashboard";
 
 function AppRoutes() {
   return (
@@ -34,6 +35,7 @@ function AppRoutes() {
       <Route path="/user-dashboard" element={<UserDashboard />} />
       <Route path="/driver-dashboard" element={<DriverDashboard />} />
       <Route path="/pending-vehicle" element={<PendingVehicle />} />
+      <Route path="/owner-dashboard" element={<OwnerDashboard />} />
       {/* Add more routes as needed */}
     </Routes>
   );
