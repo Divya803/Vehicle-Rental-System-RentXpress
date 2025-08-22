@@ -177,7 +177,7 @@ const PostVehicle = () => {
       formDataObj.append("description", formData.description);
       formDataObj.append("userId", userId);
 
-      const response = await fetch("http://localhost:5000/api/reservation/postVehicle", {
+      const response = await fetch("http://localhost:5000/api/vehicles/postVehicle", {
         method: "POST",
         body: formDataObj,
       });

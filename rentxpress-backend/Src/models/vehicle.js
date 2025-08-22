@@ -40,6 +40,10 @@ module.exports = new EntitySchema({
     userId: {
       type: "int",
     },
+    issueDetails: {
+      type: "text", // stores detailed issue information
+      nullable: true, // can be null if no issues
+    },
   },
   relations: {
     user: {

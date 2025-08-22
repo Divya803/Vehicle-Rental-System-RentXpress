@@ -25,7 +25,7 @@ export default function AdminVehicleApproval() {
 
   const fetchPendingVehicles = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/reservation/vehicles/pending", {
+      const res = await axios.get("http://localhost:5000/api/vehicles/pending", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -44,17 +44,18 @@ export default function AdminVehicleApproval() {
   };
 
   const fetchVehicleCounts = async () => {
-    try {
-      const res = await axios.get("http://localhost:5000/api/admin/vehicles/counts", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      setVehicleCounts(res.data);
-    } catch (error) {
-      console.error("Error fetching vehicle counts:", error);
-    }
-  };
+  try {
+    const res = await axios.get("http://localhost:5000/api/vehicles/counts", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    setVehicleCounts(res.data);
+  } catch (error) {
+    console.error("Error fetching vehicle counts:", error);
+  }
+};
+
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('en-US', {
@@ -65,51 +66,56 @@ export default function AdminVehicleApproval() {
   };
 
   const handleApprove = async () => {
-    try {
-      const res = await axios.patch(
-        `http://localhost:5000/api/admin/vehicles/${selectedVehicle.id}/approve`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+  try {
+    await axios.patch(
+      `http://localhost:5000/api/vehicles/${selectedVehicle.id}/approve`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
 
-      messageApi.success("Vehicle approved successfully!");
-      setPendingVehicles(pendingVehicles.filter((v) => v.id !== selectedVehicle.id));
-      setIsModalOpen(false);
-      fetchVehicleCounts(); // Refresh counts
-    } catch (err) {
-      console.error("Approval error:", err);
-      messageApi.error("Something went wrong");
-    }
-  };
+    messageApi.success("Vehicle approved successfully!");
+    setPendingVehicles(pendingVehicles.filter((v) => v.id !== selectedVehicle.id));
+    setIsModalOpen(false);
+    fetchVehicleCounts(); // Refresh counts
+  } catch (err) {
+    console.error("Approval error:", err);
+    messageApi.error("Something went wrong");
+  }
+};
+
+ 
 
   const handleReject = async () => {
-    try {
-      const res = await axios.patch(
-        `http://localhost:5000/api/admin/vehicles/${selectedVehicle.id}/reject`,
-        { reason: rejectionReason },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+  if (!rejectionReason.trim()) return;
 
-      messageApi.success("Vehicle rejected");
-      setPendingVehicles(pendingVehicles.filter((v) => v.id !== selectedVehicle.id));
-      setIsRejectModalOpen(false);
-      setIsModalOpen(false);
-      setRejectionReason("");
-      fetchVehicleCounts(); // Refresh counts
-    } catch (err) {
-      console.error("Rejection error:", err);
-      messageApi.error("Something went wrong");
-    }
-  };
+  try {
+    await axios.patch(
+      `http://localhost:5000/api/vehicles/${selectedVehicle.id}/reject`,
+      { reason: rejectionReason },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    messageApi.success("Vehicle rejected");
+    setPendingVehicles(pendingVehicles.filter((v) => v.id !== selectedVehicle.id));
+    setIsRejectModalOpen(false);
+    setIsModalOpen(false);
+    setRejectionReason("");
+    fetchVehicleCounts(); // Refresh counts
+  } catch (err) {
+    console.error("Rejection error:", err);
+    messageApi.error("Something went wrong");
+  }
+};
+
 
   return (
     <div style={{ backgroundColor: "white", minHeight: "100vh" }}>
