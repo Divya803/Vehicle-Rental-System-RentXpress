@@ -23,7 +23,7 @@
 //   useEffect(() => {
 //     const fetchVehicle = async () => {
 //       try {
-//         const res = await axios.get(`http://localhost:5000/api/reservation/vehicles/${vehicleId}`);
+//         const res = await axios.get(`http://localhost:5000/api/vehicles/vehicles/${vehicleId}`);
 //         setVehicle(res.data);
 //       } catch (err) {
 //         console.error("Failed to fetch vehicle", err);
@@ -43,27 +43,7 @@
 //     }
 //   }, [pickupDate, endDate]);
 
-//   // const handleConfirmRental = async () => {
-//   //   try {
-//   //     const userId = localStorage.getItem("userId"); // or from context/auth
-//   //     const totalAmount = duration * (rentalType === "With Driver" ? vehicle?.withDriverPrice : vehicle?.price);
 
-//   //     await axios.post("http://localhost:5000/api/reservation/createReservation", {
-//   //       userId,
-//   //       vehicleId: vehicle.vehicleId,
-//   //       startDate: pickupDate,
-//   //       endDate: endDate,
-//   //       totalAmount,
-//   //       reservationType: rentalType
-//   //     });
-
-//   //     alert("Reservation successful!");
-//   //     setIsModalOpen(false);
-//   //   } catch (error) {
-//   //     console.error("Reservation failed", error);
-//   //     alert("Failed to make reservation");
-//   //   }
-//   // };
 
 //   const handleConfirmRental = async () => {
 //   try {
@@ -221,34 +201,38 @@ const RentVehicle = () => {
 
   const handleConfirmRental = async () => {
   try {
-    const userId = parseInt(localStorage.getItem("userId")); // Parse as integer
+    const userId = parseInt(localStorage.getItem("userId"));
     const totalAmount = duration * (rentalType === "With Driver" ? vehicle?.withDriverPrice : vehicle?.price);
 
-    // Add debugging logs
-    console.log("User ID from localStorage:", localStorage.getItem("userId"));
-    console.log("Parsed User ID:", userId);
-    console.log("Vehicle ID:", vehicle.vehicleId);
-
-    const requestData = {
+    // First create reservation
+    const reservationRes = await axios.post("http://localhost:5000/api/reservation/createReservation", {
       userId,
       vehicleId: vehicle.vehicleId,
       startDate: pickupDate,
       endDate: endDate,
       totalAmount,
       reservationType: rentalType
-    };
+    });
 
-    console.log("Request data:", requestData);
+   const reservationId = reservationRes.data.reservation.reservationId;
 
-    await axios.post("http://localhost:5000/api/reservation/createReservation", requestData);
 
-    alert("Reservation successful!");
-    setIsModalOpen(false);
+    // Then call backend to create Stripe checkout session
+    const paymentRes = await axios.post("http://localhost:5000/api/payments/create-checkout-session", {
+      reservationId,
+      amount: totalAmount,
+      rentalType
+    });
+
+    // Redirect to Stripe checkout
+    window.location.href = paymentRes.data.url;
+
   } catch (error) {
-    console.error("Reservation failed", error);
-    alert("Failed to make reservation");
+    console.error("Payment failed", error);
+    alert("Failed to start payment");
   }
 };
+
 
   return (
     <div className="container">

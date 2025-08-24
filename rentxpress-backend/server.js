@@ -36,21 +36,30 @@
 //     })
 //     .catch((error) => console.error("Database connection failed:", error));
 
-
+const dotenv = require("dotenv");
+dotenv.config();
 const express = require("express");
 const cors = require("cors");
-const dotenv = require("dotenv");
 const dataSource = require("./Src/config/config");
 const userRoutes = require("./Src/routes/userRoutes");
 const reservationRoutes = require("./Src/routes/reservationRoutes");
 const vehicleRoutes = require("./Src/routes/vehicleRoutes");
+const paymentRoutes = require("./Src/routes/paymentRoutes");
+const { webhookHandler } = require("./Src/controllers/paymentController");
 const path = require("path");
 const mime = require('mime-types');
 
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// app.post("/webhook", express.raw({ type: "application/json" }), webhookHandler);
+
+console.log("🔧 Setting up webhook endpoint...");
+app.post("/api/payments/webhook", express.raw({ type: "application/json" }), (req, res) => {
+  console.log("🎯 Webhook endpoint hit!");
+  webhookHandler(req, res);
+});
 
 // Middleware
 app.use(express.json());
@@ -72,6 +81,7 @@ app.get("/", (req, res) => {
 app.use("/api/users", userRoutes);
 app.use("/api/reservation", reservationRoutes);
 app.use("/api/vehicles", vehicleRoutes);
+app.use("/api/payments", paymentRoutes);
 
 // Start Server
 app.listen(PORT, () => {

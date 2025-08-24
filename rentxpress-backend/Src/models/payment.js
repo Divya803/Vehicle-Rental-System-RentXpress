@@ -16,7 +16,7 @@ module.exports = new EntitySchema({
       type: "varchar", // e.g., 'pending', 'successful', 'failed'
     },
     paymentMethod: {
-      type: "varchar", // 'card', 'paypal', etc.
+      type: "varchar", 
     },
   },
   relations: {
