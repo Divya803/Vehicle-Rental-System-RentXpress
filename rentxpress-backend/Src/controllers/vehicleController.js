@@ -208,6 +208,34 @@ const getVehicleCounts = async (req, res) => {
   }
 };
 
+const getMyVehicles = async (req, res) => {
+  try {
+    const userId = req.user.userId; // assuming JWT middleware adds this
+    const vehicleRepo = AppDataSource.getRepository(Vehicle);
+
+    const vehicles = await vehicleRepo.find({
+      where: { userId }, // only fetch logged-in owner's vehicles
+    });
+
+    const mapped = vehicles.map((v) => ({
+      vehicleId: v.vehicleId,
+      vehicleName: v.vehicleName,
+      price: v.price,
+      category: v.category,
+      description: v.description,
+      status: v.status,
+      rejectionReason: v.issueDetails || null,
+      image: v.image ? `http://localhost:5000/${v.image}` : null,
+      createdAt: v.createdAt || null,
+    }));
+
+    res.status(200).json(mapped);
+  } catch (error) {
+    console.error("Error fetching owner's vehicles:", error);
+    res.status(500).json({ error: "Failed to fetch vehicles" });
+  }
+};
+
 
 module.exports = {
   postVehicle,
@@ -217,6 +245,7 @@ module.exports = {
   getPendingVehicles,
   approveVehicle,
   rejectVehicle,
-  getVehicleCounts
+  getVehicleCounts,
+  getMyVehicles,
 
 };

@@ -9,116 +9,54 @@ import {
   FaTimesCircle,
   FaCalendarAlt,
   FaExclamationTriangle,
-  FaCar
+  FaCar,
 } from "react-icons/fa";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const UserDashboard = () => {
+const OwnerDashboard = () => {
   const [bookings, setBookings] = useState([]);
-  const [verificationStatus, setVerificationStatus] = useState(null);
   const [loading, setLoading] = useState(true);
   const [userInfo, setUserInfo] = useState({});
   const [vehicles, setVehicles] = useState([]);
+  const navigate = useNavigate();
+
+  const fetchUserProfile = async (config) => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/users/profile",
+        config
+      );
+      setUserInfo({
+        firstName: response.data.firstName,
+      });
+    } catch (error) {
+      console.error("Error loading user profile:", error);
+      setUserInfo({ firstName: "User" });
+    }
+  };
+
+
+  const fetchMyVehicles = async (config) => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/vehicles/myVehicles",
+        config
+      );
+      setVehicles(response.data || []);
+    } catch (error) {
+      console.error("Error loading vehicles:", error);
+      setVehicles([]);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem("token");
-      const config = {
-        headers: { Authorization: `Bearer ${token}` },
-      };
+      const config = { headers: { Authorization: `Bearer ${token}` } };
 
-      // Load bookings
-      try {
-        const bookingsResponse = await axios.get(
-          "http://localhost:5000/api/reservation/myBookings",
-          config
-        );
-        setBookings(bookingsResponse.data || []);
-      } catch (error) {
-        console.error("Error loading bookings:", error);
-        setBookings([]);
-      }
-
-      // Load verification & user info
-      try {
-        const verificationResponse = await axios.get(
-          "http://localhost:5000/api/users/myVerificationStatus",
-          config
-        );
-        const verificationData = verificationResponse.data;
-
-        setVerificationStatus({
-          status: verificationData.status,
-          role: verificationData.role,
-          submittedAt: verificationData.createdAt || null,
-          rejectionReason: verificationData.issueDetails || "",
-        });
-
-        setUserInfo({
-          firstName: verificationData.firstName,
-        });
-      } catch (error) {
-        console.error("Error loading verification status:", error);
-        setVerificationStatus(null);
-
-        try {
-          const userResponse = await axios.get(
-            "http://localhost:5000/api/users/profile",
-            config
-          );
-          setUserInfo({
-            firstName: userResponse.data.firstName,
-          });
-        } catch (userError) {
-          console.error("Error loading user info:", userError);
-          setUserInfo({ firstName: "User" });
-        }
-      }
-
-      // Mock vehicle data (replace this later with backend fetch)
-      const mockVehicles = [
-        {
-          vehicleId: 1,
-          vehicleName: "Toyota Prius",
-          make: "Toyota",
-          model: "Prius",
-          year: 2018,
-          pricePerDay: 5500,
-          licensePlate: "ABC-1234",
-          location: "Colombo",
-          status: "Approved",
-          image: "https://via.placeholder.com/300x180.png?text=Toyota+Prius",
-          createdAt: "2024-07-15",
-        },
-        {
-          vehicleId: 2,
-          vehicleName: "Honda Civic",
-          make: "Honda",
-          model: "Civic",
-          year: 2020,
-          pricePerDay: 6500,
-          licensePlate: "XYZ-5678",
-          location: "Kandy",
-          status: "Pending",
-          image: "https://via.placeholder.com/300x180.png?text=Honda+Civic",
-          createdAt: "2024-08-01",
-        },
-        {
-          vehicleId: 3,
-          vehicleName: "Nissan Leaf",
-          make: "Nissan",
-          model: "Leaf",
-          year: 2019,
-          pricePerDay: 7000,
-          licensePlate: "EFG-9012",
-          location: "Galle",
-          status: "Rejected",
-          rejectionReason: "Incomplete documents uploaded.",
-          image: "https://via.placeholder.com/300x180.png?text=Nissan+Leaf",
-          createdAt: "2024-08-10",
-        },
-      ];
-      setVehicles(mockVehicles);
+      await fetchUserProfile(config);
+      await fetchMyVehicles(config);
 
       setLoading(false);
     };
@@ -164,6 +102,35 @@ const UserDashboard = () => {
         return "#6B7280";
     }
   };
+
+  const fetchOwnerBookings = async (config) => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/reservation/ownerBookings",
+        config
+      );
+      setBookings(response.data || []);
+    } catch (error) {
+      console.error("Error loading bookings:", error);
+      setBookings([]);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+
+      await fetchUserProfile(config);
+      await fetchMyVehicles(config);
+      await fetchOwnerBookings(config);
+
+      setLoading(false);
+    };
+
+    fetchData();
+  }, []);
+
 
   if (loading) {
     return (
@@ -222,11 +189,19 @@ const UserDashboard = () => {
                 {vehicles.map((vehicle, index) => (
                   <div key={vehicle.vehicleId || index} className="v-card">
                     <div className="v-header">
-                      <div >
-                        <p className="v-name" style={{ color:"white" }}>{vehicle.vehicleName || "Unknown Vehicle"}</p>
+                      <div>
+                        <p
+                          className="v-name"
+                          style={{ color: "white" }}
+                        >
+                          {vehicle.vehicleName || "Unknown Vehicle"}
+                        </p>
                       </div>
                       <div className="v-status">
-                        <div className="status-badge" data-status={vehicle.status?.toLowerCase()}>
+                        <div
+                          className="status-badge"
+                          data-status={vehicle.status?.toLowerCase()}
+                        >
                           {getStatusIcon(vehicle.status)}
                           <span>{vehicle.status || "Unknown"}</span>
                         </div>
@@ -242,7 +217,9 @@ const UserDashboard = () => {
                             />
                             <span>Issue Details:</span>
                           </div>
-                          <p className="rejection-text">{vehicle.rejectionReason}</p>
+                          <p className="rejection-text">
+                            {vehicle.rejectionReason}
+                          </p>
                         </div>
                       )}
                   </div>
@@ -250,14 +227,14 @@ const UserDashboard = () => {
               </div>
             ) : (
               <div>
-                <FaCar style={{ fontSize: "48px", opacity: 0.5, color: "#9E9E9E" }} />
+                <FaCar style={{ fontSize: '48px', marginBottom: '20px', opacity: 0.5 }} />
                 <p>No vehicles submitted yet</p>
                 <Button
                   value="Add Vehicle"
                   type="button"
                   style={{ marginTop: "10px" }}
                   onClick={() => {
-                    // Navigate to add vehicle page
+                    navigate("/post-vehicle");
                   }}
                 />
               </div>
@@ -283,7 +260,7 @@ const UserDashboard = () => {
                 margin: 0,
               }}
             >
-              Recent Bookings
+              Recent Bookings of Your Vehicles
             </p>
           </div>
 
@@ -316,7 +293,9 @@ const UserDashboard = () => {
                         }}
                       >
                         {getStatusIcon(booking.status)}
-                        <span style={{ color: getStatusColor(booking.status) }}>
+                        <span
+                          style={{ color: getStatusColor(booking.status) }}
+                        >
                           {booking.status}
                         </span>
                       </div>,
@@ -353,4 +332,4 @@ const UserDashboard = () => {
   );
 };
 
-export default UserDashboard;
+export default OwnerDashboard;

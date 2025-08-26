@@ -78,7 +78,7 @@ const multer = require("multer");
 const verifyToken = require('../middleware/authMiddleware');
 const { createUser, getUsers, deleteUser, submitVerification, getProfile, deleteUserProfile, 
   getPendingVerifications, approveVerification,getUserCountsByRole, rejectVerification, getVerificationIssues, 
-  getMyVerificationStatus, downloadFile} = require("../controllers/userController");
+  getMyVerificationStatus, downloadFile, changePassword} = require("../controllers/userController");
 const { login } = require('../controllers/authController');
 
 const router = express.Router();
@@ -127,5 +127,6 @@ router.patch("/verify/:id/reject", verifyToken, rejectVerification);
 router.get("/verify/issues", verifyToken, getVerificationIssues);
 router.get("/myVerificationStatus", verifyToken, getMyVerificationStatus);
 router.get("/file/:filename", downloadFile);
+router.put("/change-password", verifyToken, changePassword);
 
 module.exports = router;

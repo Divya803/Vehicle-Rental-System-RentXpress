@@ -12,12 +12,14 @@ import {
   FaExclamationTriangle
 } from "react-icons/fa";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const UserDashboard = () => {
   const [bookings, setBookings] = useState([]);
   const [verificationStatus, setVerificationStatus] = useState(null);
   const [loading, setLoading] = useState(true);
   const [userInfo, setUserInfo] = useState({});
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -272,7 +274,9 @@ const UserDashboard = () => {
                 value="Submit Verification"
                 type="button"
                 style={{ marginTop: "10px" }}
-                onClick={() => {}}
+                onClick={() => {
+                  navigate("/verify-account");
+                }}
               />
             </div>
           )}
@@ -361,7 +365,9 @@ const UserDashboard = () => {
                   value="Browse Vehicles"
                   type="button"
                   style={{ marginTop: "10px" }}
-                  onClick={() => {}}
+                  onClick={() => {
+                    navigate("/vehicles");
+                  }}
                 />
               </div>
             )}

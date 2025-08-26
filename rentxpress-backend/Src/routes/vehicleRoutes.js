@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { postVehicle, getAllVehicles, getVehicleById, toggleVehicleAvailability, getPendingVehicles, 
-  approveVehicle, rejectVehicle, getVehicleCounts} = require("../controllers/vehicleController");
+  approveVehicle, rejectVehicle, getVehicleCounts, getMyVehicles} = require("../controllers/vehicleController");
 const verifyToken = require('../middleware/authMiddleware');
 const multer = require("multer");
 
@@ -26,6 +26,7 @@ router.patch('/vehicles/:vehicleId/availability', toggleVehicleAvailability);
 router.patch("/:id/approve", verifyToken, approveVehicle);
 router.patch("/:id/reject", verifyToken, rejectVehicle);
 router.get("/counts", verifyToken, getVehicleCounts);
+router.get("/myVehicles", verifyToken, getMyVehicles);
 
 
 

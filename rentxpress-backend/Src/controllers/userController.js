@@ -471,6 +471,32 @@ const downloadFile = (req, res) => {
   });
 };
 
+const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body; // 👈 match frontend
+    const userId = req.user.id; // set by auth middleware
+    const repo = AppDataSource.getRepository(User);
+
+    const foundUser = await repo.findOneBy({ userId });
+
+    if (!foundUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (foundUser.password !== currentPassword) {  // 👈 compare correctly
+      return res.status(400).json({ message: "Old password is incorrect" });
+    }
+
+    foundUser.password = newPassword; // plain text update
+    await repo.save(foundUser);
+
+    res.json({ message: "Password updated successfully" });
+  } catch (err) {
+    console.error("Change password error:", err);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
 module.exports = {
   createUser,
   getUsers,
@@ -484,5 +510,6 @@ module.exports = {
   rejectVerification,
   getVerificationIssues,
   getMyVerificationStatus,
-  downloadFile
+  downloadFile,
+  changePassword
 };

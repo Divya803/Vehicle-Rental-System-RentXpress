@@ -32,7 +32,10 @@ const Login = () => {
     navigate("/admin-dashboard");
   } else if (data.role === "Driver") {
     navigate("/driver-dashboard");
-  } else {
+  } else if (data.role === "Vehicle Owner") {
+    navigate("/owner-dashboard");
+  } 
+  else {
     navigate("/user-dashboard");
   }
     } else {

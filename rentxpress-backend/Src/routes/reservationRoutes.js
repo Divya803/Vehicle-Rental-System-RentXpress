@@ -42,7 +42,7 @@
 const express = require("express");
 const router = express.Router();
 const {createReservation, getPendingReservations, getConfirmedReservations, getMyBookings, getAvailableDrivers, assignDriver, getAssignedRides,acceptRide,
-  rejectRide,getConfirmedRidesForDriver, rejectReservation, getReservationCounts} = require("../controllers/reservationController");
+  rejectRide,getConfirmedRidesForDriver, rejectReservation, getReservationCounts, getOwnerBookings} = require("../controllers/reservationController");
 const verifyToken = require('../middleware/authMiddleware');
 
 
@@ -58,5 +58,6 @@ router.post('/reject-ride', verifyToken, rejectRide);
 router.get('/confirmed-rides-driver', verifyToken, getConfirmedRidesForDriver);
 router.patch("/:reservationId/reject", rejectReservation);
 router.get("/counts", verifyToken, getReservationCounts);
+router.get("/ownerBookings", verifyToken, getOwnerBookings);
 
 module.exports = router;
