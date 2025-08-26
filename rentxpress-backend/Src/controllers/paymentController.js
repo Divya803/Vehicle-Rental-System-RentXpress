@@ -464,7 +464,6 @@ const webhookHandler = async (req, res) => {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-
   try {
     const paymentRepo = dataSource.getRepository(Payment);
     const reservationRepo = dataSource.getRepository(Reservation);

@@ -86,7 +86,6 @@ const PaymentSuccess = () => {
             <h2 style={{ color: '#2ed573', marginBottom: '20px' }}>Payment Successful!</h2>
             <p style={{ color: '#666', marginBottom: '30px' }}>
               Thank you for your payment. Your vehicle reservation has been confirmed.
-              You will receive a confirmation email shortly.
             </p>
           </>
         )}
