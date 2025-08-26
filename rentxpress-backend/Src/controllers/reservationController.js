@@ -139,7 +139,49 @@ const getConfirmedReservations = async (req, res) => {
 
     res.status(200).json(enrichedReservations);
   } catch (error) {
-    console.error("Error fetching confirmed reservations without driver:", error);
+    console.error("Error fetching confirmed reservations", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const getCancelledReservations = async (req, res) => {
+  try {
+    const reservationRepo = AppDataSource.getRepository("Reservation");
+    const reservations = await reservationRepo.find({
+      where: {
+        isCancelled: true,
+        status: "Cancelled" 
+      },
+      relations: ["user", "vehicle"]
+    });
+
+    const enrichedReservations = reservations.map(reservation => {
+      const startDate = new Date(reservation.startDate);
+      const endDate = new Date(reservation.endDate);
+      const timeDiff = Math.abs(endDate - startDate);
+      const durationDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+
+      return {
+        id: reservation.reservationId,
+        customerName: reservation.user?.firstName + " " + reservation.user?.lastName,
+        customerPhone: reservation.user?.phoneNo,
+        customerEmail: reservation.user?.email,
+        vehicleId: reservation.vehicle?.vehicleId,
+        vehicleName: reservation.vehicle?.vehicleName,
+        vehicleType: reservation.vehicle?.category,
+        vehicleAvailable: reservation.vehicle?.isAvailable,
+        startDate: reservation.startDate,
+        endDate: reservation.endDate,
+        totalAmount: reservation.totalAmount,
+        duration: `${durationDays} day${durationDays > 1 ? 's' : ''}`,
+        requestDate: reservation.createdAt || reservation.startDate, 
+        status: reservation.status
+      };
+    });
+
+    res.status(200).json(enrichedReservations);
+  } catch (error) {
+    console.error("Error fetching cancelled reservations", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -616,12 +658,44 @@ const getOwnerBookings = async (req, res) => {
   }
 };
 
+const cancelReservation = async (req, res) => {
+  try {
+    const reservationId = parseInt(req.params.id);
+    const userId = req.user.id; 
+
+    const reservationRepo = AppDataSource.getRepository("Reservation");
+
+    const reservation = await reservationRepo.findOne({
+      where: { reservationId, user: { userId: userId } },
+    });
+
+    if (!reservation) {
+      return res.status(404).json({ message: "Reservation not found" });
+    }
+
+    if (reservation.isCancelled) {
+      return res.status(400).json({ message: "Reservation already cancelled" });
+    }
+
+    reservation.isCancelled = true;
+    reservation.status = "Cancelled";
+
+    await reservationRepo.save(reservation);
+
+    res.json({ message: "Reservation cancelled successfully", reservation });
+  } catch (error) {
+    console.error("Error cancelling reservation:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 
 
 module.exports = {
   createReservation,
   getPendingReservations,
   getConfirmedReservations,
+  getCancelledReservations,
   getMyBookings,
   getAvailableDrivers,
   assignDriver,
@@ -631,7 +705,8 @@ module.exports = {
   getConfirmedRidesForDriver,
   rejectReservation,
   getReservationCounts,
-  getOwnerBookings
+  getOwnerBookings,
+  cancelReservation
 
 };
 
