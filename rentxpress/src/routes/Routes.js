@@ -18,6 +18,7 @@ import PendingReservations from "../pages/PendingReservations/PendingReservation
 import OwnerDashboard from "../pages/OwnerDashboard/OwnerDashboard";
 import PaymentSuccess from "../pages/Payment/PaymentSuccess";
 import PaymentCancel from "../pages/Payment/PaymentCancel";
+import Reviews from "../pages/Reviews/Reviews";
 
 function AppRoutes() {
   return (
@@ -25,7 +26,6 @@ function AppRoutes() {
       <Route path="/" element={<HomePage />} />
       <Route path="/admin-dashboard" element={<AdminDashboard />} />
       <Route path="/login" element={<Login />} />
-      {/* <Route path="/rent-vehicles" element={<RentVehicles />} /> */}
       <Route path="/rent-vehicles/:vehicleId" element={<RentVehicles />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/user-details" element={<UserDetails />} />
@@ -40,7 +40,8 @@ function AppRoutes() {
       <Route path="/owner-dashboard" element={<OwnerDashboard />} />
       <Route path="/payment-success" element={<PaymentSuccess />} />
       <Route path="/payment-cancel" element={<PaymentCancel />} />
-      {/* Add more routes as needed */}
+      <Route path="/reviews" element={<Reviews />} />
+
     </Routes>
   );
 }

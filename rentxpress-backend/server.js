@@ -45,9 +45,11 @@ const userRoutes = require("./Src/routes/userRoutes");
 const reservationRoutes = require("./Src/routes/reservationRoutes");
 const vehicleRoutes = require("./Src/routes/vehicleRoutes");
 const paymentRoutes = require("./Src/routes/paymentRoutes");
+const reviewRoutes = require("./Src/routes/reviewRoutes");
 const { webhookHandler } = require("./Src/controllers/paymentController");
 const path = require("path");
 const mime = require('mime-types');
+const review = require("./Src/models/review");
 
 
 const app = express();
@@ -82,6 +84,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/reservation", reservationRoutes);
 app.use("/api/vehicles", vehicleRoutes);
 app.use("/api/payments", paymentRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 // Start Server
 app.listen(PORT, () => {

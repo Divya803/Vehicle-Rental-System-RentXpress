@@ -133,6 +133,7 @@
     cursor: pointer;
     font-weight: bold;
     transition: 0.3s;
+    margin-top: 20px;
   }
   
   .login-btn:hover {

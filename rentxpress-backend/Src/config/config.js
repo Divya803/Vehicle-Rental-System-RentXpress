@@ -6,6 +6,8 @@ const Reservation = require("../models/reservation");
 const Payment = require("../models/payment");
 const VerificationRequest = require("../models/verificationRequest");
 const ReservationDriverLog = require("../models/reservationDriverLog");
+const Review = require("../models/review");
+const review = require("../models/review");
 
 const dataSource = new DataSource({
     type: "postgres",
@@ -14,7 +16,7 @@ const dataSource = new DataSource({
     username: "postgres", // Your PostgreSQL username
     password: "Divya803", // Your PostgreSQL password
     database: "rentxpress",  // Your local database name
-    entities: [User, Vehicle, Reservation, Payment, VerificationRequest, ReservationDriverLog],
+    entities: [User, Vehicle, Reservation, Payment, VerificationRequest, ReservationDriverLog, Review],
     synchronize: true,   // ⚠️ Set to `false` in production, use migrations instead
     logging: false,      // Change to `true` if you want SQL logs in the console
 });
