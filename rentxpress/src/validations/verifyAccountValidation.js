@@ -36,7 +36,7 @@
 //       const birthDate = new Date(value);
 //       const age = today.getFullYear() - birthDate.getFullYear();
 //       const monthDiff = today.getMonth() - birthDate.getMonth();
-      
+
 //       if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
 //         return age - 1 >= 18;
 //       }
@@ -81,13 +81,13 @@ const verifyAccountValidation = Yup.object().shape({
     })
     .required("Date of Birth is required")
     .max(new Date(), "Date of Birth cannot be in the future")
-    .test('age-check', 'You must be at least 18 years old', function(value) {
+    .test('age-check', 'You must be at least 18 years old', function (value) {
       if (!value) return true; // Let required validation handle empty values
       const today = new Date();
       const birthDate = new Date(value);
       const age = today.getFullYear() - birthDate.getFullYear();
       const monthDiff = today.getMonth() - birthDate.getMonth();
-      
+
       if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
         return age - 1 >= 18;
       }
@@ -107,7 +107,7 @@ const verifyAccountValidation = Yup.object().shape({
     }),
   vehicleRegistration: Yup.mixed()
     .when("role", {
-      is: "Vehicle Owner", 
+      is: "Vehicle Owner",
       then: (schema) => schema.required("Vehicle registration document is required"),
       otherwise: (schema) => schema.nullable()
     }),
