@@ -5,10 +5,40 @@ const { getRepository } = require("typeorm");
 const path = require('path');
 const fs = require('fs');
 const mime = require('mime-types');
+const bcrypt = require("bcrypt");
 
 
 const userRepository = AppDataSource.getRepository("User");
 const verificationRepo = AppDataSource.getRepository("VerificationRequest");
+
+// const createUser = async (req, res) => {
+//   try {
+//     const { firstName, lastName, email, phoneNo, password } = req.body;
+
+//     // Check if user already exists
+//     const existingUser = await userRepository.findOne({ where: { email } });
+//     if (existingUser) {
+//       return res.status(400).json({ message: "Email already exists" });
+//     }
+
+//     // Save user with plain text password (not secure)
+//     const newUser = userRepository.create({
+//       firstName,
+//       lastName,
+//       email,
+//       phoneNo,
+//       password,
+//       role: "User",
+//     });
+
+//     await userRepository.save(newUser);
+//     res.status(201).json({ message: "User created successfully" });
+
+//   } catch (error) {
+//     console.error("Signup error:", error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
 
 const createUser = async (req, res) => {
   try {
@@ -20,13 +50,15 @@ const createUser = async (req, res) => {
       return res.status(400).json({ message: "Email already exists" });
     }
 
-    // Save user with plain text password (not secure)
+    // Hash password before saving
+    const hashedPassword = await bcrypt.hash(password, 10); // 10 salt rounds is good
+
     const newUser = userRepository.create({
       firstName,
       lastName,
       email,
       phoneNo,
-      password,
+      password: hashedPassword, // store hashed password
       role: "User",
     });
 
@@ -335,10 +367,36 @@ const downloadFile = (req, res) => {
   });
 };
 
+// const changePassword = async (req, res) => {
+//   try {
+//     const { currentPassword, newPassword } = req.body; 
+//     const userId = req.user.id; // set by auth middleware
+//     const repo = AppDataSource.getRepository(User);
+
+//     const foundUser = await repo.findOneBy({ userId });
+
+//     if (!foundUser) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     if (foundUser.password !== currentPassword) {  
+//       return res.status(400).json({ message: "Old password is incorrect" });
+//     }
+
+//     foundUser.password = newPassword; 
+//     await repo.save(foundUser);
+
+//     res.json({ message: "Password updated successfully" });
+//   } catch (err) {
+//     console.error("Change password error:", err);
+//     res.status(500).json({ message: "Something went wrong" });
+//   }
+// };
+
 const changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body; 
-    const userId = req.user.id; // set by auth middleware
+    const userId = req.user.id; 
     const repo = AppDataSource.getRepository(User);
 
     const foundUser = await repo.findOneBy({ userId });
@@ -347,11 +405,16 @@ const changePassword = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if (foundUser.password !== currentPassword) {  
+    // Compare current password
+    const isMatch = await bcrypt.compare(currentPassword, foundUser.password);
+    if (!isMatch) {
       return res.status(400).json({ message: "Old password is incorrect" });
     }
 
-    foundUser.password = newPassword; 
+    // Hash new password
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    foundUser.password = hashedNewPassword;
+
     await repo.save(foundUser);
 
     res.json({ message: "Password updated successfully" });

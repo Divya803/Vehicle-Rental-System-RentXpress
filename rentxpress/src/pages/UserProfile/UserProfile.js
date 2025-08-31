@@ -207,6 +207,8 @@ import { FaUser } from "react-icons/fa";
 import Button from "../../components/Button/Button";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import Modal from "../../components/Modal/Modal";
+import { message } from "antd";
+
 
 const UserProfile = () => {
   const [formData, setFormData] = useState({
@@ -224,6 +226,8 @@ const UserProfile = () => {
     newPassword: "",
     confirmPassword: ""
   });
+  const [messageApi, contextHolder] = message.useMessage();
+
 
   // 🔹 Fetch user profile when component mounts
   useEffect(() => {
@@ -272,7 +276,7 @@ const UserProfile = () => {
 
   const handleChangePassword = async () => {
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      alert("New passwords don't match");
+      messageApi.warning("New passwords don't match ⚠️");
       return;
     }
 
@@ -294,7 +298,7 @@ const UserProfile = () => {
       const data = await res.json();
 
       if (res.ok) {
-        alert("Password changed successfully");
+        messageApi.success("Password changed successfully");
         setIsChangePasswordModalOpen(false);
         setPasswordData({
           currentPassword: "",
@@ -302,11 +306,11 @@ const UserProfile = () => {
           confirmPassword: ""
         });
       } else {
-        alert(data.message || "Failed to change password");
+        messageApi.error(data.message || "Failed to change password");
       }
     } catch (error) {
       console.error("Password change error:", error);
-      alert("Something went wrong");
+      messageApi.error("Something went wrong ❌");
     }
   };
 
@@ -325,20 +329,21 @@ const UserProfile = () => {
       const data = await res.json();
 
       if (res.ok) {
-        alert("Account deleted successfully");
+        messageApi.success("Account deleted successfully");
         localStorage.removeItem("token");
         window.location.href = "/"; // redirect to homepage or login
       } else {
-        alert(data.message || "Failed to delete account");
+        messageApi.error(data.message || "Failed to delete account");
       }
     } catch (error) {
       console.error("Delete error:", error);
-      alert("Something went wrong");
+      messageApi.error("Something went wrong ❌");
     }
   };
 
   return (
     <div>
+      {contextHolder}
       <NavigationBar />
       <div className="profile-container">
         <div className="profile-card">
