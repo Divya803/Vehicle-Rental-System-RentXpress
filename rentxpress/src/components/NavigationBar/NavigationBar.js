@@ -74,7 +74,7 @@ const NavigationBar = ({ isLoggedIn = false }) => {
                 <li><Link to="/driver-dashboard" className="nav-link">Driver Dashboard</Link></li>
               )}
 
-              {userRole === "user" && (
+              {userRole === "User" && (
                 <>
                   <li><Link to="/user-dashboard" className="nav-link">User Dashboard</Link></li>
                   <li><Link to="/vehicles" className="nav-link">Vehicles</Link></li>

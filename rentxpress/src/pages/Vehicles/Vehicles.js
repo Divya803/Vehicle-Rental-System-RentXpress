@@ -72,6 +72,8 @@ import { Link } from "react-router-dom";
 const Vehicles = () => {
   const [category, setCategory] = useState("All");
   const [vehicles, setVehicles] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
 
   useEffect(() => {
     const fetchVehicles = async () => {
@@ -103,7 +105,14 @@ const Vehicles = () => {
       </header>
 
       <div className="search-container">
-        <input type="text" placeholder="Search" className="search-input" />
+        <input
+          type="text"
+          placeholder="Search"
+          className="search-input"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+
 
         <select
           className="category-select"
@@ -122,8 +131,11 @@ const Vehicles = () => {
 
       <div className="vehicle-list">
         {vehicles
-          .filter((vehicle) => category === "All" || vehicle.category === category)
-          .map((vehicle) => (
+          .filter(vehicle =>
+            (category === "All" || vehicle.category === category) &&
+            (vehicle.vehicleName.toLowerCase().includes(searchTerm.toLowerCase()))
+          )
+          .map(vehicle => (
             <div key={vehicle.vehicleId} className="vehicle-card">
               <img src={vehicle.image} alt={vehicle.vehicleName} className="vehicle-img" />
               <h3>{vehicle.vehicleName}</h3>
@@ -137,9 +149,10 @@ const Vehicles = () => {
                   NOT AVAILABLE
                 </button>
               )}
-
             </div>
-          ))}
+          ))
+        }
+
       </div>
     </div>
   );

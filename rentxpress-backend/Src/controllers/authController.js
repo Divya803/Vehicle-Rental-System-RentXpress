@@ -21,18 +21,18 @@ exports.login = async (req, res) => {
       { expiresIn: '1h' }
     );
 
-   res.json({
-  token,
-  role: foundUser.role,
-  userId: foundUser.userId,
-  userName: `${foundUser.firstName} ${foundUser.lastName}`,   
-  user: {
-    userId: foundUser.userId,
-    email: foundUser.email,
-    firstName: foundUser.firstName,
-    lastName: foundUser.lastName     
-  }
-});
+    res.json({
+      token,
+      role: foundUser.role,
+      userId: foundUser.userId,
+      userName: `${foundUser.firstName} ${foundUser.lastName}`,
+      user: {
+        userId: foundUser.userId,
+        email: foundUser.email,
+        firstName: foundUser.firstName,
+        lastName: foundUser.lastName
+      }
+    });
 
   } catch (err) {
     console.error(err);

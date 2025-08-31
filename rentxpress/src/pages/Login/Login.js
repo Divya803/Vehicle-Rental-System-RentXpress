@@ -2,12 +2,16 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import Image from "../../assets/login car.png";
+import { message } from "antd";
+
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [messageApi, contextHolder] = message.useMessage();
+
 
   const handleLogin = async (e) => {
   e.preventDefault();
@@ -27,7 +31,6 @@ const Login = () => {
       localStorage.setItem("userId", data.userId);
       localStorage.setItem("userName", data.userName);
 
-      alert("Login successful!");
 
       if (data.role === "Admin") {
     navigate("/admin-dashboard");
@@ -40,16 +43,17 @@ const Login = () => {
     navigate("/user-dashboard");
   }
     } else {
-      alert(data.message || "Login failed");
+      messageApi.error(data.message || "Login failed ❌");
     }
   } catch (err) {
-    alert("An error occurred");
+    messageApi.error("An unexpected error occurred ❌");
     console.error(err);
   }
 };
 
   return (
     <div className="login-container">
+      {contextHolder}
       <img src={Image} alt="Car" className="car-image" />
       <div className="login-box">
         <h2>Log in</h2>

@@ -496,6 +496,8 @@ import {
   FaPhone,
   FaExclamationTriangle
 } from "react-icons/fa";
+import { message } from "antd";
+
 
 
 const DriverDashboard = () => {
@@ -517,6 +519,8 @@ const DriverDashboard = () => {
   const [processingReject, setProcessingReject] = useState(false);
 
   const token = localStorage.getItem("token");
+  const [messageApi, contextHolder] = message.useMessage();
+
 
   useEffect(() => {
     const fetchAssignedRides = async () => {
@@ -581,11 +585,11 @@ const DriverDashboard = () => {
       setShowConfirmModal(false);
       setSelectedRide(null);
 
-      alert("Ride accepted successfully!");
+      messageApi.success("Ride accepted successfully");
 
     } catch (error) {
       console.error("Error accepting ride:", error);
-      alert("Failed to accept ride. Please try again.");
+      messageApi.error("Failed to accept ride ❌ Please try again.");
     } finally {
       setProcessingAccept(false);
     }
@@ -616,11 +620,11 @@ const DriverDashboard = () => {
       setShowRejectModal(false);
       setSelectedRejectRide(null);
 
-      alert("Ride rejected successfully!");
+      messageApi.success("Ride rejected successfully 🚫");
 
     } catch (error) {
       console.error("Error rejecting ride:", error);
-      alert("Failed to reject ride. Please try again.");
+      messageApi.error("Failed to reject ride ❌ Please try again.");
     } finally {
       setProcessingReject(false);
     }
@@ -687,6 +691,7 @@ const DriverDashboard = () => {
   if (loading) {
     return (
       <div style={{ backgroundColor: "white", minHeight: "100vh" }}>
+        {contextHolder} 
         <NavigationBar />
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
           <p>Loading your dashboard...</p>

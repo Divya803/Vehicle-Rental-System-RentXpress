@@ -8,6 +8,7 @@ import Button from "../../components/Button/Button";
 import Table, { TableRow } from "../../components/Table/Table";
 import Modal from "../../components/Modal/Modal";
 import axios from "axios";
+import { message } from "antd"; 
 
 export default function AdDashboard() {
   const [pendingUsers, setPendingUsers] = useState([]);
@@ -19,6 +20,7 @@ export default function AdDashboard() {
   const [rejectionReason, setRejectionReason] = useState("");
   const [fileError, setFileError] = useState("");
   const navigate = useNavigate();
+  const [messageApi, contextHolder] = message.useMessage(); 
 
   useEffect(() => {
     const fetchPendingVerifications = async () => {
@@ -197,7 +199,7 @@ export default function AdDashboard() {
 
   const handleVerify = async () => {
     try {
-      const res = await axios.patch(
+      await axios.patch(
         `http://localhost:5000/api/users/verify/${selectedRequest.verifyId}/approve`,
         {},
         {
@@ -207,18 +209,18 @@ export default function AdDashboard() {
         }
       );
 
-      alert("User verified successfully");
+      messageApi.success("User verified successfully"); // ✅ Success message
       setPendingUsers(pendingUsers.filter((u) => u.verifyId !== selectedRequest.verifyId));
       setIsModalOpen(false);
     } catch (err) {
       console.error("Verification error:", err);
-      alert("Something went wrong");
+      messageApi.error("Failed to verify user ❌"); // ❌ Error message
     }
   };
 
   const handleReject = async () => {
     try {
-      const res = await axios.patch(
+      await axios.patch(
         `http://localhost:5000/api/users/verify/${selectedRequest.verifyId}/reject`,
         { reason: rejectionReason },
         {
@@ -229,19 +231,21 @@ export default function AdDashboard() {
         }
       );
 
-      alert("User verification rejected");
+      messageApi.success("User verification rejected"); // ✅ Rejected message
       setPendingUsers(pendingUsers.filter((u) => u.verifyId !== selectedRequest.verifyId));
       setIsRejectModalOpen(false);
       setIsModalOpen(false);
       setRejectionReason("");
     } catch (err) {
       console.error("Rejection error:", err);
-      alert("Something went wrong");
+      messageApi.error("Failed to reject verification ❌"); 
     }
   };
 
+
   return (
     <div style={{ backgroundColor: "white", minHeight: "100vh" }}>
+      {contextHolder}
       <NavigationBar />
 
       <div style={{ display: "flex" }}>

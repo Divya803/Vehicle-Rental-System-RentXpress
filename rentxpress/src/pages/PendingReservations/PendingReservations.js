@@ -9,6 +9,7 @@ import Button from "../../components/Button/Button";
 import Table, { TableRow } from "../../components/Table/Table";
 import Modal from "../../components/Modal/Modal";
 import axios from "axios";
+import { message } from "antd";
 
 export default function PendingReservations() {
   const [pendingRequests, setPendingRequests] = useState([]);
@@ -26,9 +27,8 @@ export default function PendingReservations() {
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
-
-
   const navigate = useNavigate();
+  const [messageApi, contextHolder] = message.useMessage(); 
 
   // Fetch data
   useEffect(() => {
@@ -106,7 +106,7 @@ export default function PendingReservations() {
   // Toggle vehicle availability manually
   const toggleVehicleAvailability = async (vehicleId, currentStatus) => {
     try {
-      const response = await axios.patch(
+      await axios.patch(
         `http://localhost:5000/api/vehicles/vehicles/${vehicleId}/availability`,
         { isAvailable: !currentStatus },
         {
@@ -117,33 +117,24 @@ export default function PendingReservations() {
         }
       );
 
-      // Update the local state for pending requests
+      // Update the local state
       setPendingRequests(pendingRequests.map(req =>
-        req.vehicleId === vehicleId
-          ? { ...req, vehicleAvailable: !currentStatus }
-          : req
+        req.vehicleId === vehicleId ? { ...req, vehicleAvailable: !currentStatus } : req
       ));
-
-      // Update the local state for confirmed requests
       setConfirmedRequests(confirmedRequests.map(req =>
-        req.vehicleId === vehicleId
-          ? { ...req, vehicleAvailable: !currentStatus }
-          : req
+        req.vehicleId === vehicleId ? { ...req, vehicleAvailable: !currentStatus } : req
       ));
-
-      // Update the local state for cancelled requests
       setCancelledRequests(cancelledRequests.map(req =>
-        req.vehicleId === vehicleId
-          ? { ...req, vehicleAvailable: !currentStatus }
-          : req
+        req.vehicleId === vehicleId ? { ...req, vehicleAvailable: !currentStatus } : req
       ));
 
-      alert(`Vehicle availability updated to ${!currentStatus ? 'Available' : 'Unavailable'}`);
+      messageApi.success(`Vehicle availability updated to ${!currentStatus ? 'Available' : 'Unavailable'}`);
     } catch (error) {
       console.error("Error updating vehicle availability:", error);
-      alert("Failed to update vehicle availability. Please try again.");
+      messageApi.error("Failed to update vehicle availability");
     }
   };
+
 
   const handleAssignDriver = async () => {
     try {
@@ -160,13 +151,12 @@ export default function PendingReservations() {
         }
       );
 
-      alert(response.data.message);
+      messageApi.success(response.data.message || "Driver assigned successfully");
 
       // Refresh data
       setIsAssignModalOpen(false);
       setIsDetailsModalOpen(false);
 
-      // Re-fetch reservations
       const pendingRes = await axios.get("http://localhost:5000/api/reservation/pending", {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
@@ -179,7 +169,7 @@ export default function PendingReservations() {
 
     } catch (error) {
       console.error("Error assigning driver:", error);
-      alert("Failed to assign driver. Please try again.");
+      messageApi.error("Failed to assign driver");
     }
   };
 
@@ -190,7 +180,6 @@ export default function PendingReservations() {
 
   const handleRejectRequest = async () => {
     if (!selectedRequest) return;
-    console.log("Selected request:", selectedRequest);
 
     try {
       await axios.patch(
@@ -203,14 +192,13 @@ export default function PendingReservations() {
         }
       );
 
-      // Remove from pendingRequests
       setPendingRequests(pendingRequests.filter(r => r.reservationId !== selectedRequest.reservationId));
-
       setIsRejectModalOpen(false);
-      alert("Reservation rejected successfully!");
+
+      messageApi.success("Reservation rejected successfully 🚫");
     } catch (error) {
       console.error("Error rejecting reservation:", error);
-      alert("Failed to reject reservation. Please try again.");
+      messageApi.error("Failed to reject reservation ");
     }
   };
 
@@ -323,6 +311,7 @@ export default function PendingReservations() {
 
   return (
     <div style={{ backgroundColor: "white", minHeight: "190vh" }}>
+      {contextHolder} 
       <NavigationBar />
 
       <div style={{ display: "flex" }}>

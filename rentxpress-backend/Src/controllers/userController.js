@@ -62,65 +62,6 @@ const deleteUser = async (req, res) => {
   }
 };
 
-// const submitVerification = async (req, res) => {
-//   try {
-//     const { firstName, lastName, age, phoneNo, nic, dateOfBirth, role, userId } = req.body;
-
-//     // Access file (sent via multipart/form-data)
-//     const identification = req.file ? `/uploads/${req.file.filename}` : null;
-
-//     const verificationRequest = verificationRepo.create({
-//       firstName,
-//       lastName,
-//       age,
-//       phoneNo,
-//       nic,
-//       dateOfBirth,
-//       role,
-//       identification,
-//       status: "pending",
-//       user: { userId: 6 }, // assuming userId is sent and exists
-//     });
-
-//     await verificationRepo.save(verificationRequest);
-//     res.status(201).json({ message: "Verification submitted successfully" });
-//   } catch (error) {
-//     console.error("Submit verification error:", error);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
-
-// const submitVerification = async (req, res) => {
-//   try {
-//     const { firstName, lastName, age, phoneNo, nic, dateOfBirth, role } = req.body;
-
-//     // Access file
-//     // const identification = req.file ? `/uploads/${req.file.filename}` : null;
-//     const identificationPaths = req.files.map(file => `/uploads/${file.filename}`);
-
-//     const userId = req.user.id; // ✅ Use token's user ID
-
-//     const verificationRequest = verificationRepo.create({
-//       firstName,
-//       lastName,
-//       age,
-//       phoneNo,
-//       nic,
-//       dateOfBirth,
-//       role,
-//       identification: JSON.stringify(identificationPaths),
-//       status: "pending",
-//       user: { userId }, // ✅ Link to correct user
-//     });
-
-//     await verificationRepo.save(verificationRequest);
-
-//     res.status(201).json({ message: "Verification submitted successfully" });
-//   } catch (error) {
-//     console.error("Submit verification error:", error);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
 
 const submitVerification = async (req, res) => {
   try {
@@ -294,20 +235,6 @@ const getUserCountsByRole = async (req, res) => {
   }
 };
 
-// const rejectVerification = async (req, res) => {
-//   const { id } = req.params;
-//   const { issueDetails } = req.body;
-
-//   try {
-//     // update logic, for example:
-//     await verificationRepo.update(id, { status: "Rejected", issueDetails });
-
-//     res.status(200).json({ message: "Verification rejected" });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: "Failed to reject verification" });
-//   }
-// };
 
 const rejectVerification = async (req, res) => {
   const { id } = req.params;
@@ -357,53 +284,7 @@ const getVerificationIssues = async (req, res) => {
   }
 };
 
-// const getMyVerificationStatus = async (req, res) => {
-//   try {
-//     // Add defensive checks
-//     if (!req.user) {
-//       console.log("❌ req.user is undefined");
-//       return res.status(401).json({ error: "User not authenticated" });
-//     }
 
-//     const userId = req.user.id;
-//     console.log("📍 Checking verification status for user:", userId);
-    
-//     if (!userId) {
-//       console.log("❌ User ID is undefined");
-//       return res.status(401).json({ error: "Invalid user ID" });
-//     }
-
-//     const verificationRepo = AppDataSource.getRepository("VerificationRequest");
-    
-//     // Fix the query - use 'userId' in the user relation
-//     const status = await verificationRepo.findOne({ 
-//       where: { user: { userId: userId } },
-//       relations: ["user"]
-//     });
-
-//     if (!status) {
-//       return res.status(200).json({ 
-//         message: "No verification request found",
-//         status: "not_submitted",
-//         role: req.user.role 
-//       });
-//     }
-
-//     // Transform the response to match frontend expectations
-//     const response = {
-//       status: status.status,
-//       role: status.role || req.user.role,
-//       submittedAt: status.submittedAt || status.createdAt,
-//       rejectionReason: status.issueDetails || status.rejectionReason, // Use issueDetails from schema
-//       ...status // Include any other fields
-//     };
-
-//     res.json(response);
-//   } catch (err) {
-//     console.error("❌ Error in getMyVerificationStatus:", err);
-//     res.status(500).json({ error: "Failed to fetch verification status", details: err.message });
-//   }
-// };
 
 const getMyVerificationStatus = async (req, res) => {
   try {
@@ -426,17 +307,6 @@ const getMyVerificationStatus = async (req, res) => {
   }
 };
 
-// const downloadFile = (req, res) => {
-//   const filename = req.params.filename;
-//   const filePath = path.join(__dirname, "../uploads", filename); // "../uploads" since uploads folder is usually outside controllers
-
-//   res.download(filePath, (err) => {
-//     if (err) {
-//       console.error("Download error:", err);
-//       res.status(404).json({ message: "File not found" });
-//     }
-//   });
-// };
 
 const downloadFile = (req, res) => {
   const filename = req.params.filename;
@@ -453,12 +323,6 @@ const downloadFile = (req, res) => {
   // Set proper headers
   res.setHeader('Content-Type', mimeType);
   res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
-  
-  // For security, you might want to add authentication check here
-  // const token = req.headers.authorization?.replace('Bearer ', '') || req.query.token;
-  // if (!token) {
-  //   return res.status(401).json({ message: "Unauthorized" });
-  // }
 
   // Send the file
   res.sendFile(filePath, (err) => {
@@ -473,7 +337,7 @@ const downloadFile = (req, res) => {
 
 const changePassword = async (req, res) => {
   try {
-    const { currentPassword, newPassword } = req.body; // 👈 match frontend
+    const { currentPassword, newPassword } = req.body; 
     const userId = req.user.id; // set by auth middleware
     const repo = AppDataSource.getRepository(User);
 
@@ -483,11 +347,11 @@ const changePassword = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if (foundUser.password !== currentPassword) {  // 👈 compare correctly
+    if (foundUser.password !== currentPassword) {  
       return res.status(400).json({ message: "Old password is incorrect" });
     }
 
-    foundUser.password = newPassword; // plain text update
+    foundUser.password = newPassword; 
     await repo.save(foundUser);
 
     res.json({ message: "Password updated successfully" });

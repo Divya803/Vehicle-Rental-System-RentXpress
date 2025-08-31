@@ -9,6 +9,7 @@ import Modal from "../../components/Modal/Modal";
 import { message } from "antd";
 import axios from "axios";
 
+
 export default function AdminVehicleApproval() {
   const [pendingVehicles, setPendingVehicles] = useState([]);
   const [vehicleCounts, setVehicleCounts] = useState({});
