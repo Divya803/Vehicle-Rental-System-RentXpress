@@ -52,7 +52,7 @@ module.exports = new EntitySchema({
       joinColumn: {
         name: "userId", // this is the foreign key in Vehicle table
       },
-      onDelete: "CASCADE", // optional
+      onDelete: "CASCADE",
     },
   },
 });

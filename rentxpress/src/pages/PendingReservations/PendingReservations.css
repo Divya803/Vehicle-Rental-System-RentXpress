@@ -14,7 +14,6 @@
   color: #ffffff;
 }
 
-/* Enhanced Table Cell Styling for Perfect Alignment */
 .customer-info-cell {
   display: flex;
   flex-direction: column;
@@ -122,7 +121,6 @@
   gap: 5px;
 }
 
-/* Table Styling Enhancements */
 .vehicle-requests table {
   width: 100%;
   border-collapse: collapse;
@@ -141,7 +139,6 @@
 
 .vehicle-requests table td {
   padding: 8px 12px;
-  /* border-bottom: 1px solid #374151; */
   color: #E5E7EB;
   vertical-align: middle;
 }
@@ -151,7 +148,6 @@
   transition: background-color 0.2s ease;
 }
 
-/* Override table component styles for better alignment */
 .vehicle-requests .table-container tr {
   min-height: 80px !important;
   align-items: center !important;
@@ -169,8 +165,6 @@
   text-align: left !important;
 }
 
-/* Location and Date Styling */
-
 .date-info {
   display: flex;
   flex-direction: column;
@@ -187,7 +181,6 @@
   color: #9CA3AF;
 }
 
-/* Status Indicators */
 .status-pending {
   background-color: #F59E0B20;
   color: #F59E0B;
@@ -297,7 +290,6 @@
   font-size: 0.9rem;
 }
 
-/* Empty State */
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -314,7 +306,7 @@
   opacity: 0.5;
 }
 
-/* Button Enhancements */
+
 .actions-cell button {
   transition: all 0.2s ease;
   width: 100px;

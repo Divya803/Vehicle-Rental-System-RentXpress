@@ -19,7 +19,7 @@ const ForgotPassword = () => {
             const res = await fetch("http://localhost:5000/api/users/forgot-password", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, phoneNo, nic, newPassword }),
+                body: JSON.stringify({ email, phoneNo, newPassword }),
             });
 
             const data = await res.json();

@@ -45,17 +45,17 @@ export default function AdminVehicleApproval() {
   };
 
   const fetchVehicleCounts = async () => {
-  try {
-    const res = await axios.get("http://localhost:5000/api/vehicles/counts", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-    setVehicleCounts(res.data);
-  } catch (error) {
-    console.error("Error fetching vehicle counts:", error);
-  }
-};
+    try {
+      const res = await axios.get("http://localhost:5000/api/vehicles/counts", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setVehicleCounts(res.data);
+    } catch (error) {
+      console.error("Error fetching vehicle counts:", error);
+    }
+  };
 
 
   const formatPrice = (price) => {
@@ -67,55 +67,55 @@ export default function AdminVehicleApproval() {
   };
 
   const handleApprove = async () => {
-  try {
-    await axios.patch(
-      `http://localhost:5000/api/vehicles/${selectedVehicle.id}/approve`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
+    try {
+      await axios.patch(
+        `http://localhost:5000/api/vehicles/${selectedVehicle.id}/approve`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
 
-    messageApi.success("Vehicle approved successfully!");
-    setPendingVehicles(pendingVehicles.filter((v) => v.id !== selectedVehicle.id));
-    setIsModalOpen(false);
-    fetchVehicleCounts(); // Refresh counts
-  } catch (err) {
-    console.error("Approval error:", err);
-    messageApi.error("Something went wrong");
-  }
-};
+      messageApi.success("Vehicle approved successfully!");
+      setPendingVehicles(pendingVehicles.filter((v) => v.id !== selectedVehicle.id));
+      setIsModalOpen(false);
+      fetchVehicleCounts(); // Refresh counts
+    } catch (err) {
+      console.error("Approval error:", err);
+      messageApi.error("Something went wrong");
+    }
+  };
 
- 
+
 
   const handleReject = async () => {
-  if (!rejectionReason.trim()) return;
+    if (!rejectionReason.trim()) return;
 
-  try {
-    await axios.patch(
-      `http://localhost:5000/api/vehicles/${selectedVehicle.id}/reject`,
-      { reason: rejectionReason },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    try {
+      await axios.patch(
+        `http://localhost:5000/api/vehicles/${selectedVehicle.id}/reject`,
+        { reason: rejectionReason },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    messageApi.success("Vehicle rejected");
-    setPendingVehicles(pendingVehicles.filter((v) => v.id !== selectedVehicle.id));
-    setIsRejectModalOpen(false);
-    setIsModalOpen(false);
-    setRejectionReason("");
-    fetchVehicleCounts(); // Refresh counts
-  } catch (err) {
-    console.error("Rejection error:", err);
-    messageApi.error("Something went wrong");
-  }
-};
+      messageApi.success("Vehicle rejected");
+      setPendingVehicles(pendingVehicles.filter((v) => v.id !== selectedVehicle.id));
+      setIsRejectModalOpen(false);
+      setIsModalOpen(false);
+      setRejectionReason("");
+      fetchVehicleCounts(); // Refresh counts
+    } catch (err) {
+      console.error("Rejection error:", err);
+      messageApi.error("Something went wrong");
+    }
+  };
 
 
   return (
@@ -210,7 +210,7 @@ export default function AdminVehicleApproval() {
         {selectedVehicle && (
           <div style={{ padding: "20px", maxWidth: "600px" }}>
             <h2 style={{ color: "#161D20", marginBottom: "20px" }}>Vehicle Approval Request</h2>
-            
+
             <div className="vehicle-details-grid">
               <div className="vehicle-info">
                 <div className="info-row">
@@ -278,17 +278,17 @@ export default function AdminVehicleApproval() {
             )}
 
             <div className="modal-actions">
-              <Button 
-                value="Approve" 
-                type="button" 
+              <Button
+                value="Approve"
+                type="button"
                 onClick={handleApprove}
                 style={{ backgroundColor: "#00A8A8", color: "white" }}
               />
-              <Button 
-                value="Reject" 
-                type="button" 
-                red 
-                onClick={() => setIsRejectModalOpen(true)} 
+              <Button
+                value="Reject"
+                type="button"
+                red
+                onClick={() => setIsRejectModalOpen(true)}
               />
             </div>
           </div>
@@ -316,16 +316,16 @@ export default function AdminVehicleApproval() {
             }}
           />
           <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px", marginTop: "20px" }}>
-            <Button 
-              value="Cancel" 
-              type="button" 
-              onClick={() => setIsRejectModalOpen(false)} 
-              outlined 
+            <Button
+              value="Cancel"
+              type="button"
+              onClick={() => setIsRejectModalOpen(false)}
+              outlined
             />
-            <Button 
-              value="Confirm Reject" 
-              type="button" 
-              red 
+            <Button
+              value="Confirm Reject"
+              type="button"
+              red
               onClick={handleReject}
               disabled={!rejectionReason.trim()}
             />

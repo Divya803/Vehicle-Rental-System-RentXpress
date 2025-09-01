@@ -5,11 +5,11 @@ const PaymentCancel = () => {
   const navigate = useNavigate();
 
   const handleTryAgain = () => {
-    navigate(-1); // Go back to previous page
+    navigate(-1); 
   };
 
   const handleGoHome = () => {
-    navigate('/'); // Adjust to your home route
+    navigate('/'); 
   };
 
   return (

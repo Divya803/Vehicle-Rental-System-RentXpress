@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
-const dataSource = require("../config/config"); // ✅ Correct path/ Import the database connection
-const User = require('../models/user'); // Your User entity
+const dataSource = require("../config/config");
+const User = require('../models/user');
 const bcrypt = require("bcrypt");
 
-const JWT_SECRET = 'your_jwt_secret_key'; // Use env in production
+const JWT_SECRET = 'your_jwt_secret_key';
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;

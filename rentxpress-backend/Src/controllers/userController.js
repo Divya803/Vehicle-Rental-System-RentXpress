@@ -11,35 +11,6 @@ const bcrypt = require("bcrypt");
 const userRepository = AppDataSource.getRepository("User");
 const verificationRepo = AppDataSource.getRepository("VerificationRequest");
 
-// const createUser = async (req, res) => {
-//   try {
-//     const { firstName, lastName, email, phoneNo, password } = req.body;
-
-//     // Check if user already exists
-//     const existingUser = await userRepository.findOne({ where: { email } });
-//     if (existingUser) {
-//       return res.status(400).json({ message: "Email already exists" });
-//     }
-
-//     // Save user with plain text password (not secure)
-//     const newUser = userRepository.create({
-//       firstName,
-//       lastName,
-//       email,
-//       phoneNo,
-//       password,
-//       role: "User",
-//     });
-
-//     await userRepository.save(newUser);
-//     res.status(201).json({ message: "User created successfully" });
-
-//   } catch (error) {
-//     console.error("Signup error:", error);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
-
 const createUser = async (req, res) => {
   try {
     const { firstName, lastName, email, phoneNo, password } = req.body;
@@ -103,7 +74,7 @@ const submitVerification = async (req, res) => {
 
     // Handle different file types based on role
     const documentPaths = {};
-    
+
     // NIC document is required for all roles
     if (req.files.nicDocument && req.files.nicDocument[0]) {
       documentPaths.nicDocument = `/uploads/${req.files.nicDocument[0].filename}`;
@@ -133,7 +104,7 @@ const submitVerification = async (req, res) => {
 
     await verificationRepo.save(verificationRequest);
 
-    res.status(201).json({ 
+    res.status(201).json({
       message: "Verification submitted successfully",
       documents: Object.keys(documentPaths)
     });
@@ -254,7 +225,6 @@ const getUserCountsByRole = async (req, res) => {
       .groupBy("user.role")
       .getRawMany();
 
-    // Optional: Format into a role-count object
     const counts = results.reduce((acc, curr) => {
       acc[curr.role] = parseInt(curr.count);
       return acc;
@@ -342,7 +312,7 @@ const getMyVerificationStatus = async (req, res) => {
 
 const downloadFile = (req, res) => {
   const filename = req.params.filename;
-  const filePath = path.join(__dirname, "../../uploads", filename); // Adjust path as needed
+  const filePath = path.join(__dirname, "../../uploads", filename);
 
   // Check if file exists
   if (!fs.existsSync(filePath)) {
@@ -351,7 +321,7 @@ const downloadFile = (req, res) => {
 
   // Get the MIME type
   const mimeType = mime.lookup(filePath) || 'application/octet-stream';
-  
+
   // Set proper headers
   res.setHeader('Content-Type', mimeType);
   res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
@@ -367,36 +337,11 @@ const downloadFile = (req, res) => {
   });
 };
 
-// const changePassword = async (req, res) => {
-//   try {
-//     const { currentPassword, newPassword } = req.body; 
-//     const userId = req.user.id; // set by auth middleware
-//     const repo = AppDataSource.getRepository(User);
-
-//     const foundUser = await repo.findOneBy({ userId });
-
-//     if (!foundUser) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-
-//     if (foundUser.password !== currentPassword) {  
-//       return res.status(400).json({ message: "Old password is incorrect" });
-//     }
-
-//     foundUser.password = newPassword; 
-//     await repo.save(foundUser);
-
-//     res.json({ message: "Password updated successfully" });
-//   } catch (err) {
-//     console.error("Change password error:", err);
-//     res.status(500).json({ message: "Something went wrong" });
-//   }
-// };
 
 const changePassword = async (req, res) => {
   try {
-    const { currentPassword, newPassword } = req.body; 
-    const userId = req.user.id; 
+    const { currentPassword, newPassword } = req.body;
+    const userId = req.user.id;
     const repo = AppDataSource.getRepository(User);
 
     const foundUser = await repo.findOneBy({ userId });
@@ -429,7 +374,7 @@ const forgotPassword = async (req, res) => {
 
   try {
     const userRepo = AppDataSource.getRepository("User");
-    const user = await userRepo.findOne({ where: { email, phoneNo} });
+    const user = await userRepo.findOne({ where: { email, phoneNo } });
 
     if (!user) {
       return res.status(400).json({ message: "User verification failed" });

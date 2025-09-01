@@ -132,7 +132,7 @@ const getPendingVehicles = async (req, res) => {
       image: v.image ? `http://localhost:5000/${v.image}` : null,
       ownerName: v.user ? `${v.user.firstName} ${v.user.lastName}` : "Unknown",
       ownerPhone: v.user?.phoneNo || "N/A",
-      documents: [], // handle documents if implemented
+      documents: [],
     }));
 
     res.json(mapped);

@@ -13,9 +13,9 @@ import { message } from "antd";
 
 export default function PendingReservations() {
   const [pendingRequests, setPendingRequests] = useState([]);
-  const [confirmedRequests, setConfirmedRequests] = useState([]); 
-  const [cancelledRequests, setCancelledRequests] = useState([]); 
-  const [activeTab, setActiveTab] = useState('pending'); 
+  const [confirmedRequests, setConfirmedRequests] = useState([]);
+  const [cancelledRequests, setCancelledRequests] = useState([]);
+  const [activeTab, setActiveTab] = useState('pending');
   const [availableDrivers, setAvailableDrivers] = useState([]);
   const [vehicleCounts, setVehicleCounts] = useState({
     pending: 0,
@@ -28,7 +28,7 @@ export default function PendingReservations() {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
   const navigate = useNavigate();
-  const [messageApi, contextHolder] = message.useMessage(); 
+  const [messageApi, contextHolder] = message.useMessage();
 
   // Fetch data
   useEffect(() => {
@@ -58,7 +58,7 @@ export default function PendingReservations() {
         });
         setCancelledRequests(cancelledResponse.data);
 
-       fetchReservationCounts(); 
+        fetchReservationCounts();
       } catch (error) {
         console.error("Error fetching reservations:", error);
       }
@@ -68,17 +68,17 @@ export default function PendingReservations() {
   }, []);
 
   const fetchReservationCounts = async () => {
-  try {
-    const res = await axios.get("http://localhost:5000/api/reservation/counts", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-    setVehicleCounts(res.data); 
-  } catch (error) {
-    console.error("Error fetching reservation counts:", error);
-  }
-};
+    try {
+      const res = await axios.get("http://localhost:5000/api/reservation/counts", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setVehicleCounts(res.data);
+    } catch (error) {
+      console.error("Error fetching reservation counts:", error);
+    }
+  };
 
 
   useEffect(() => {
@@ -283,8 +283,8 @@ export default function PendingReservations() {
                   outlined
                   style={{ width: "70px", fontSize: "12px" }}
                   onClick={() => {
-                    setSelectedRequest(request);   
-                    setIsRejectModalOpen(true);    
+                    setSelectedRequest(request);
+                    setIsRejectModalOpen(true);
                   }}
                 />
               </div>
@@ -311,7 +311,7 @@ export default function PendingReservations() {
 
   return (
     <div style={{ backgroundColor: "white", minHeight: "190vh" }}>
-      {contextHolder} 
+      {contextHolder}
       <NavigationBar />
 
       <div style={{ display: "flex" }}>

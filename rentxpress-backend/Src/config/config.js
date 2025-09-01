@@ -1,4 +1,4 @@
-// src/config/config.js
+
 const { DataSource } = require("typeorm");
 const User = require("../models/user");
 const Vehicle = require("../models/vehicle");
@@ -11,14 +11,14 @@ const review = require("../models/review");
 
 const dataSource = new DataSource({
     type: "postgres",
-    host: "localhost",    // Local PostgreSQL server
-    port: 5432,          // Default PostgreSQL port
-    username: "postgres", // Your PostgreSQL username
-    password: "Divya803", // Your PostgreSQL password
-    database: "rentxpress",  // Your local database name
+    host: "localhost",    
+    port: 5432,         
+    username: "postgres", 
+    password: "Divya803", 
+    database: "rentxpress",  
     entities: [User, Vehicle, Reservation, Payment, VerificationRequest, ReservationDriverLog, Review],
-    synchronize: true,   // ⚠️ Set to `false` in production, use migrations instead
-    logging: false,      // Change to `true` if you want SQL logs in the console
+    synchronize: true,   
+    logging: false,     
 });
 
 module.exports = dataSource;

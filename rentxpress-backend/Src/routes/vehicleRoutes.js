@@ -5,7 +5,6 @@ const { postVehicle, getAllVehicles, getVehicleById, toggleVehicleAvailability, 
 const verifyToken = require('../middleware/authMiddleware');
 const multer = require("multer");
 
-// router.post("/postVehicle", postVehicle);
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/"); // save in /uploads folder
@@ -17,7 +16,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Routes
 router.post("/postVehicle", upload.single("image"), postVehicle);
 router.get("/", getAllVehicles);
 router.get("/pending",getPendingVehicles);

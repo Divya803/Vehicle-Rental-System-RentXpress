@@ -1,101 +1,3 @@
-/* Hero Section
-.hero {
-    background-size: cover;
-    background-position: center;
-    background-color: #111517;
-    color: white;
-    text-align: center;
-    padding: 80px 20px;
-  }
-  
-  .hero-content h2 {
-    font-size: 20px;
-    font-weight: bold;
-  }
-  
-  .hero-content h1 {
-    font-size: 40px;
-    font-weight: bold;
-  }
-  
-  .hero-content p {
-    font-size: 16px;
-  }
-  
- 
-
-  .vehicle-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 20px;
-    background-color: #111517;
-  }
-  
-  .vehicle-card {
-    background: white;
-    border-radius: 10px;
-    padding: 15px;
-    text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .vehicle-img {
-    width: 100%;
-    height: auto;
-    max-height: 150px;
-    object-fit: cover;
-  }
-  
-  .vehicle-card h3 {
-    font-size: 18px;
-    margin: 10px 0;
-  }
-  
-  .vehicle-card p {
-    font-size: 16px;
-    color: #666;
-  }
-  
-  .rent-button {
-    background-color: #00c4cc;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: background 0.3s ease-in-out;
-  }
-  
-  .rent-button:hover {
-    background-color: #009ba1;
-  }
-
-  .search-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .search-input {
-    width: 80%;
-    padding: 8px;
-    font-size: 16px;
-  }
-  
-  .category-dropdown {
-    padding: 8px;
-    font-size: 16px;
-    width: 15%;
-  }
-  
-   */
-
-   /* Vehicles.css */
-
-/* General styles */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -103,7 +5,7 @@ body {
     box-sizing: border-box;
   }
   
-  /* Hero Section */
+ 
   .hero {
     background-color:  #111517;
     padding: 60px 0;
@@ -129,7 +31,6 @@ body {
     margin-right: 70px;
   }
   
-  /* Search and Category Container */
   .search-container {
     display: flex;
     justify-content: space-between;
@@ -159,7 +60,6 @@ body {
   }
   
   
-  /* Vehicle List Layout */
   .vehicle-list {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -192,7 +92,7 @@ body {
   }
   
   .vehicle-card:hover {
-    transform: translateY(-5px); /* Slight hover effect */
+    transform: translateY(-5px); 
   }
   
   .vehicle-img {

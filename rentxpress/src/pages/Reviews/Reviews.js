@@ -58,41 +58,41 @@ const ReviewsAndRatings = () => {
 
   // Add new review
   const handleSubmitReview = async () => {
-  if (newReview.rating === 0 || !newReview.comment.trim()) {
-    messageApi.warning("Please provide both a rating and a comment ⚠️");
-    return;
-  }
-  setIsSubmitting(true);
+    if (newReview.rating === 0 || !newReview.comment.trim()) {
+      messageApi.warning("Please provide both a rating and a comment ⚠️");
+      return;
+    }
+    setIsSubmitting(true);
 
-  try {
-    const res = await axios.post(
-      `http://localhost:5000/api/reviews`,
-      {
-        userId: currentUserId,
-        username: currentUserName,
-        rating: newReview.rating,
-        comment: newReview.comment,
-      },
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      }
-    );
+    try {
+      const res = await axios.post(
+        `http://localhost:5000/api/reviews`,
+        {
+          userId: currentUserId,
+          username: currentUserName,
+          rating: newReview.rating,
+          comment: newReview.comment,
+        },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
 
-    setReviews([res.data, ...reviews]);
-    setNewReview({ rating: 0, comment: '' });
-    messageApi.success("Your review has been submitted");
-  } catch (err) {
-    console.error("Error adding review:", err);
-    messageApi.error("Failed to submit review ");
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+      setReviews([res.data, ...reviews]);
+      setNewReview({ rating: 0, comment: '' });
+      messageApi.success("Your review has been submitted");
+    } catch (err) {
+      console.error("Error adding review:", err);
+      messageApi.error("Failed to submit review ");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
 
   return (
     <div style={{ backgroundColor: "white", minHeight: "190vh" }}>
-      {contextHolder} 
+      {contextHolder}
       <NavigationBar />
       <div className="reviews-ratings-container">
         {/* Header */}

@@ -28,14 +28,14 @@ module.exports = new EntitySchema({
       type: "date",
     },
     role: {
-      type: "varchar", // 'driver' or 'vehicle_owner'
+      type: "varchar",
     },
     identification: {
-      type: "text", // URL or base64 string
+      type: "text", 
     },
     status: {
       type: "varchar",
-      default: "pending", // pending, approved, rejected
+      default: "pending", 
     },
     issueDetails: {
       type: "text", // stores detailed issue information

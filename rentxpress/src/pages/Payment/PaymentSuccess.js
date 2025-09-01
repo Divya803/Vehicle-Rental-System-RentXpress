@@ -16,7 +16,7 @@ const PaymentSuccess = () => {
         const sessionId = urlParams.get('session_id');
 
         if (sessionId) {
-          // Optional: Verify payment status with your backend
+          // Verify payment status with backend
           const response = await axios.get(`http://localhost:5000/api/payments/verify-session/${sessionId}`);
           setPaymentStatus(response.data);
         }
@@ -32,11 +32,11 @@ const PaymentSuccess = () => {
   }, [location]);
 
   const handleGoHome = () => {
-    navigate('/'); // Adjust to your home route
+    navigate('/'); 
   };
 
   const handleViewReservations = () => {
-    navigate('/reservations'); // Adjust to your reservations route
+    navigate('/reservations');
   };
 
   if (loading) {

@@ -150,7 +150,7 @@ const getCancelledReservations = async (req, res) => {
     const reservations = await reservationRepo.find({
       where: {
         isCancelled: true,
-        status: "Cancelled" 
+        status: "Cancelled"
       },
       relations: ["user", "vehicle"]
     });
@@ -159,7 +159,7 @@ const getCancelledReservations = async (req, res) => {
       const startDate = new Date(reservation.startDate);
       const endDate = new Date(reservation.endDate);
       const timeDiff = Math.abs(endDate - startDate);
-      const durationDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+      const durationDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
       return {
         id: reservation.reservationId,
@@ -174,7 +174,7 @@ const getCancelledReservations = async (req, res) => {
         endDate: reservation.endDate,
         totalAmount: reservation.totalAmount,
         duration: `${durationDays} day${durationDays > 1 ? 's' : ''}`,
-        requestDate: reservation.createdAt || reservation.startDate, 
+        requestDate: reservation.createdAt || reservation.startDate,
         status: reservation.status
       };
     });
@@ -190,12 +190,12 @@ const getCancelledReservations = async (req, res) => {
 
 const getMyBookings = async (req, res) => {
   try {
-    const userId = req.user.id; // still correct here
+    const userId = req.user.id;
 
     const reservationRepo = AppDataSource.getRepository(Reservation);
 
     const bookings = await reservationRepo.find({
-      where: { user: { userId } }, // 🔥 the key fix
+      where: { user: { userId } },
       relations: ["vehicle"],
       order: { startDate: "DESC" },
     });
@@ -216,7 +216,7 @@ const getAvailableDrivers = async (req, res) => {
         role: "Driver",
         isAvailable: true,
       },
-      select: ["userId", "firstName", "lastName", "email", "phoneNo"], // select only needed fields
+      select: ["userId", "firstName", "lastName", "email", "phoneNo"],
     });
 
     res.json(drivers);
@@ -226,38 +226,7 @@ const getAvailableDrivers = async (req, res) => {
   }
 };
 
-// const assignDriver = async (req, res) => {
-//   const { reservationId, driverId } = req.body;
 
-//   try {
-//     const reservationRepo = AppDataSource.getRepository(Reservation);
-//     const driverRepo = AppDataSource.getRepository(User);
-//     const logRepo = AppDataSource.getRepository(ReservationDriverLog);
-
-//     const reservation = await reservationRepo.findOneBy({ reservationId });
-//     if (!reservation) {
-//       return res.status(404).json({ message: "Reservation not found." });
-//     }
-
-//     const driver = await driverRepo.findOneBy({ userId: driverId });
-//     if (!driver || driver.role !== "Driver") {
-//       return res.status(400).json({ message: "Invalid driver selected." });
-//     }
-
-//     const log = logRepo.create({
-//       reservation,
-//       driver,
-//       status: "Pending" // or "Requested", your choice
-//     });
-//     await logRepo.save(log);
-
-//     return res.status(200).json({ message: "Driver assignment request sent successfully." });
-
-//   } catch (error) {
-//     console.error("Assign driver error:", error);
-//     return res.status(500).json({ message: "Internal server error." });
-//   }
-// };
 
 const assignDriver = async (req, res) => {
   const { reservationId, driverId } = req.body;
@@ -301,7 +270,7 @@ const assignDriver = async (req, res) => {
 
 const getAssignedRides = async (req, res) => {
   try {
-    const driverId = req.user.id; 
+    const driverId = req.user.id;
 
     const logRepo = AppDataSource.getRepository(ReservationDriverLog);
 
@@ -331,84 +300,6 @@ const getAssignedRides = async (req, res) => {
   }
 };
 
-// const acceptRide = async (req, res) => {
-//   const { reservationId } = req.body;
-//   const driverId = req.user.id; // from JWT middleware
-
-//   try {
-//     const reservationRepo = AppDataSource.getRepository("Reservation");
-//     const userRepo = AppDataSource.getRepository("User");
-//     const logRepo = AppDataSource.getRepository("ReservationDriverLog");
-
-//     // Find the reservation
-//     const reservation = await reservationRepo.findOne({
-//       where: { reservationId: parseInt(reservationId) },
-//       relations: ["user", "vehicle"]
-//     });
-
-//     if (!reservation) {
-//       return res.status(404).json({ error: "Reservation not found" });
-//     }
-
-//     // Find the driver log entry for this reservation and driver
-//     const driverLog = await logRepo.findOne({
-//       where: { 
-//         reservation: { reservationId: parseInt(reservationId) },
-//         driver: { userId: driverId },
-//         status: "Pending"
-//       },
-//       relations: ["reservation", "driver"]
-//     });
-
-//     if (!driverLog) {
-//       return res.status(404).json({ error: "No pending assignment found for this ride" });
-//     }
-
-//     // Start database transaction
-//     await AppDataSource.transaction(async (transactionalEntityManager) => {
-//       // 1. Update reservation status to "Confirmed" and assign driver
-//       await transactionalEntityManager.update("Reservation", 
-//         { reservationId: parseInt(reservationId) },
-//         { 
-//           status: "Confirmed",
-//           driver: { userId: driverId }
-//         }
-//       );
-
-//       // 2. Update driver log status to "Assigned" 
-//       await transactionalEntityManager.update("ReservationDriverLog",
-//         { logId: driverLog.logId },
-//         { status: "Assigned" }
-//       );
-
-//       // 3. Update driver availability to false
-//       await transactionalEntityManager.update("User",
-//         { userId: driverId },
-//         { isAvailable: false }
-//       );
-
-//       // 4. Reject all other pending assignments for this reservation
-//       await transactionalEntityManager.update("ReservationDriverLog",
-//         { 
-//           reservation: { reservationId: parseInt(reservationId) },
-//           logId: transactionalEntityManager.not(driverLog.logId),
-//           status: "Pending"
-//         },
-//         { status: "Rejected" }
-//       );
-//     });
-
-//     res.status(200).json({ 
-//       message: "Ride accepted successfully",
-//       reservationId: parseInt(reservationId),
-//       status: "Confirmed"
-//     });
-
-//   } catch (error) {
-//     console.error("Error accepting ride:", error);
-//     res.status(500).json({ error: "Failed to accept ride" });
-//   }
-// };
 
 const acceptRide = async (req, res) => {
   const { reservationId } = req.body;
@@ -469,42 +360,6 @@ const acceptRide = async (req, res) => {
   }
 };
 
-// const rejectRide = async (req, res) => {
-//   const { reservationId } = req.body;
-//   const driverId = req.user.id;
-
-//   try {
-//     const logRepo = AppDataSource.getRepository("ReservationDriverLog");
-
-//     // Find the driver log entry for this reservation and driver
-//     const driverLog = await logRepo.findOne({
-//       where: { 
-//         reservation: { reservationId: parseInt(reservationId) },
-//         driver: { userId: driverId },
-//         status: "Pending"
-//       }
-//     });
-
-//     if (!driverLog) {
-//       return res.status(404).json({ error: "No pending assignment found for this ride" });
-//     }
-
-//     // Update the log status to "Rejected"
-//     await logRepo.update(
-//       { logId: driverLog.logId },
-//       { status: "Rejected" }
-//     );
-
-//     res.status(200).json({ 
-//       message: "Ride rejected successfully",
-//       reservationId: parseInt(reservationId)
-//     });
-
-//   } catch (error) {
-//     console.error("Error rejecting ride:", error);
-//     res.status(500).json({ error: "Failed to reject ride" });
-//   }
-// };
 
 const rejectRide = async (req, res) => {
   const { reservationId } = req.body;
@@ -517,7 +372,7 @@ const rejectRide = async (req, res) => {
 
     // Find the driver log entry for this reservation and driver
     const driverLog = await logRepo.findOne({
-      where: { 
+      where: {
         reservation: { reservationId: parseInt(reservationId) },
         driver: { userId: driverId },
         status: "Pending"
@@ -545,7 +400,7 @@ const rejectRide = async (req, res) => {
       { status: "Pending" }
     );
 
-    res.status(200).json({ 
+    res.status(200).json({
       message: `${driverName} rejected the request`,
       reservationId: parseInt(reservationId),
       driverName: driverName
@@ -562,7 +417,7 @@ const getConfirmedRidesForDriver = async (req, res) => {
     const driverId = req.user.id;
 
     const reservationRepo = AppDataSource.getRepository("Reservation");
-    
+
     const confirmedRides = await reservationRepo.find({
       where: {
         driver: { userId: driverId },
@@ -609,7 +464,7 @@ const rejectReservation = async (req, res) => {
     }
 
     reservation.status = "Rejected";
-    reservation.isCancelled = true; // optional, mark as cancelled
+    reservation.isCancelled = true;
     await reservationRepo.save(reservation);
 
     return res.status(200).json({ message: "Reservation rejected successfully" });
@@ -621,7 +476,7 @@ const rejectReservation = async (req, res) => {
 
 const getReservationCounts = async (req, res) => {
   try {
-    const reservationRepository = AppDataSource.getRepository("Reservation"); // ✅ use entity name string
+    const reservationRepository = AppDataSource.getRepository("Reservation");
 
     const pendingCount = await reservationRepository.count({ where: { status: "Pending" } });
     const confirmedCount = await reservationRepository.count({ where: { status: "Confirmed" } });
@@ -648,7 +503,7 @@ const getOwnerBookings = async (req, res) => {
       .createQueryBuilder("reservation")
       .leftJoinAndSelect("reservation.vehicle", "vehicle")
       .leftJoinAndSelect("reservation.user", "user")
-      .where("vehicle.userId = :userId", { userId }) // adjust column name if it's "userId" instead of "ownerId"
+      .where("vehicle.userId = :userId", { userId })
       .getMany();
 
     res.json(bookings);
@@ -661,7 +516,7 @@ const getOwnerBookings = async (req, res) => {
 const cancelReservation = async (req, res) => {
   try {
     const reservationId = parseInt(req.params.id);
-    const userId = req.user.id; 
+    const userId = req.user.id;
 
     const reservationRepo = AppDataSource.getRepository("Reservation");
 

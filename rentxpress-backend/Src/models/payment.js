@@ -13,7 +13,7 @@ module.exports = new EntitySchema({
       type: "float",
     },
     status: {
-      type: "varchar", // e.g., 'pending', 'successful', 'failed'
+      type: "varchar", 
     },
     paymentMethod: {
       type: "varchar", 

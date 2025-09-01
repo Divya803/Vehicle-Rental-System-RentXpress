@@ -84,10 +84,9 @@ form {
   min-width: 265px;
 }
 
-/* Input Group Styling */
 .input-group {
-  margin-bottom: 15px; /* Add consistent spacing between input groups */
-  text-align: left; /* Align labels to the left */
+  margin-bottom: 15px; 
+  text-align: left; 
 }
 
 .input-group label {
@@ -106,14 +105,13 @@ input {
   font-size: 1rem;
 }
 
-/* Error message styling */
 .error-message {
   color: red;
   font-size: 12px;
   margin-top: 5px;
   margin-bottom: 5px;
   text-align: left;
-  min-height: 0; /* Prevent taking up space when empty */
+  min-height: 0; 
 }
 
 .password-info {
@@ -144,7 +142,7 @@ input {
 .login-text {
   margin-top: 15px;
   font-size: 0.9rem;
-  margin-bottom: 20px; /* Add bottom margin to prevent cutoff */
+  margin-bottom: 20px; 
 }
 
 .login-text a {

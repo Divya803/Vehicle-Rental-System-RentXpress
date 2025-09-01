@@ -2,7 +2,7 @@ const AppDataSource = require("../config/config");
 const Review = require("../models/review");
 const {getRepository} = require("typeorm");
 
-// ✅ Get all reviews
+
 const getReviews = async (req, res) => {
   try {
     const reviewRepo = AppDataSource.getRepository(Review);
@@ -14,7 +14,7 @@ const getReviews = async (req, res) => {
   }
 };
 
-// ✅ Add a review
+
 const createReview = async (req, res) => {
   try {
     const { userId, username, rating, comment } = req.body;
@@ -35,7 +35,6 @@ const createReview = async (req, res) => {
 };
 
 
-// ✅ Delete a review
 const deleteReview = async (req, res) => {
   try {
     const { id } = req.params;
