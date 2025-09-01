@@ -19,6 +19,7 @@ import OwnerDashboard from "../pages/OwnerDashboard/OwnerDashboard";
 import PaymentSuccess from "../pages/Payment/PaymentSuccess";
 import PaymentCancel from "../pages/Payment/PaymentCancel";
 import Reviews from "../pages/Reviews/Reviews";
+import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
 
 function AppRoutes() {
   return (
@@ -41,6 +42,8 @@ function AppRoutes() {
       <Route path="/payment-success" element={<PaymentSuccess />} />
       <Route path="/payment-cancel" element={<PaymentCancel />} />
       <Route path="/reviews" element={<Reviews />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+
 
     </Routes>
   );

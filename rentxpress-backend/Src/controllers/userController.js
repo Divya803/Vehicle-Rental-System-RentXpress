@@ -424,6 +424,30 @@ const changePassword = async (req, res) => {
   }
 };
 
+const forgotPassword = async (req, res) => {
+  const { email, phoneNo, nic, newPassword } = req.body;
+
+  try {
+    const userRepo = AppDataSource.getRepository("User");
+    const user = await userRepo.findOne({ where: { email, phoneNo} });
+
+    if (!user) {
+      return res.status(400).json({ message: "User verification failed" });
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+
+    await userRepo.save(user);
+
+    return res.json({ message: "Password reset successfully" });
+  } catch (err) {
+    console.error("Forgot password error:", err);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
 module.exports = {
   createUser,
   getUsers,
@@ -438,5 +462,6 @@ module.exports = {
   getVerificationIssues,
   getMyVerificationStatus,
   downloadFile,
-  changePassword
+  changePassword,
+  forgotPassword
 };
