@@ -214,7 +214,7 @@ const getMyVehicles = async (req, res) => {
     const vehicleRepo = AppDataSource.getRepository(Vehicle);
 
     const vehicles = await vehicleRepo.find({
-      where: { userId }, // only fetch logged-in owner's vehicles
+      where: { userId: req.user.id }
     });
 
     const mapped = vehicles.map((v) => ({

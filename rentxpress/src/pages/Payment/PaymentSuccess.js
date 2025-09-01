@@ -92,20 +92,6 @@ const PaymentSuccess = () => {
         
         <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
           <button
-            onClick={handleViewReservations}
-            style={{
-              backgroundColor: '#3742fa',
-              color: 'white',
-              padding: '12px 24px',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer',
-              fontSize: '16px'
-            }}
-          >
-            View Reservations
-          </button>
-          <button
             onClick={handleGoHome}
             style={{
               backgroundColor: '#747d8c',

@@ -4,6 +4,7 @@ import Button from "../../components/Button/Button";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import axios from "axios";
 import verifyAccountValidation from "../../validations/verifyAccountValidation";
+import { message } from "antd";
 
 const VerifyAccount = () => {
   const [formData, setFormData] = useState({
@@ -16,42 +17,40 @@ const VerifyAccount = () => {
     role: "",
   });
 
-  // Separate state for different document types
   const [files, setFiles] = useState({
     nicDocument: null,
     licenseDocument: null,
-    vehicleRegistration: null
+    vehicleRegistration: null,
   });
 
   const [previews, setPreviews] = useState({
     nicDocument: null,
     licenseDocument: null,
-    vehicleRegistration: null
+    vehicleRegistration: null,
   });
 
-  const [message, setMessage] = useState("");
   const [errors, setErrors] = useState({});
+
+  const [messageApi, contextHolder] = message.useMessage();
 
   const handleChange = (e) => {
     const newFormData = { ...formData, [e.target.id]: e.target.value };
 
-    // Clear files when role changes
     if (e.target.id === "role") {
       setFiles({
         nicDocument: null,
         licenseDocument: null,
-        vehicleRegistration: null
+        vehicleRegistration: null,
       });
       setPreviews({
         nicDocument: null,
         licenseDocument: null,
-        vehicleRegistration: null
+        vehicleRegistration: null,
       });
     }
 
-    // Clear error for the field being changed
     if (errors[e.target.id]) {
-      setErrors(prev => ({ ...prev, [e.target.id]: "" }));
+      setErrors((prev) => ({ ...prev, [e.target.id]: "" }));
     }
 
     setFormData(newFormData);
@@ -60,19 +59,17 @@ const VerifyAccount = () => {
   const handleFileChange = (documentType) => (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFiles(prev => ({ ...prev, [documentType]: file }));
+      setFiles((prev) => ({ ...prev, [documentType]: file }));
 
-      // Clear error for the document being uploaded
       if (errors[documentType]) {
-        setErrors(prev => ({ ...prev, [documentType]: "" }));
+        setErrors((prev) => ({ ...prev, [documentType]: "" }));
       }
 
-      // Create preview if it's an image
       if (file.type.startsWith("image/")) {
         const previewURL = URL.createObjectURL(file);
-        setPreviews(prev => ({ ...prev, [documentType]: previewURL }));
+        setPreviews((prev) => ({ ...prev, [documentType]: previewURL }));
       } else {
-        setPreviews(prev => ({ ...prev, [documentType]: "PDF" }));
+        setPreviews((prev) => ({ ...prev, [documentType]: "PDF" }));
       }
     }
   };
@@ -81,21 +78,19 @@ const VerifyAccount = () => {
     e.preventDefault();
 
     try {
-      // Create validation data including files
       const validationData = {
         ...formData,
         nicDocument: files.nicDocument,
         licenseDocument: files.licenseDocument,
-        vehicleRegistration: files.vehicleRegistration
+        vehicleRegistration: files.vehicleRegistration,
       };
 
-      // Validate form data including documents
       await verifyAccountValidation.validate(validationData, { abortEarly: false });
-      setErrors({}); // Clear any previous errors
+      setErrors({}); // clear previous errors
 
       const token = localStorage.getItem("token");
       if (!token) {
-        alert("Please log in first");
+        messageApi.error("Please log in first");
         return;
       }
 
@@ -104,18 +99,9 @@ const VerifyAccount = () => {
         payload.append(key, formData[key]);
       }
 
-      // Add files based on role
-      if (files.nicDocument) {
-        payload.append("nicDocument", files.nicDocument);
-      }
-
-      if (formData.role === "Driver" && files.licenseDocument) {
-        payload.append("licenseDocument", files.licenseDocument);
-      }
-
-      if (formData.role === "Vehicle Owner" && files.vehicleRegistration) {
-        payload.append("vehicleRegistration", files.vehicleRegistration);
-      }
+      if (files.nicDocument) payload.append("nicDocument", files.nicDocument);
+      if (formData.role === "Driver" && files.licenseDocument) payload.append("licenseDocument", files.licenseDocument);
+      if (formData.role === "Vehicle Owner" && files.vehicleRegistration) payload.append("vehicleRegistration", files.vehicleRegistration);
 
       const response = await axios.post("http://localhost:5000/api/users/verify", payload, {
         headers: {
@@ -124,7 +110,7 @@ const VerifyAccount = () => {
         },
       });
 
-      setMessage(response.data.message);
+      messageApi.success(response.data.message);
 
       // Reset form
       setFormData({
@@ -136,28 +122,19 @@ const VerifyAccount = () => {
         dateOfBirth: "",
         role: "",
       });
-      setFiles({
-        nicDocument: null,
-        licenseDocument: null,
-        vehicleRegistration: null
-      });
-      setPreviews({
-        nicDocument: null,
-        licenseDocument: null,
-        vehicleRegistration: null
-      });
+      setFiles({ nicDocument: null, licenseDocument: null, vehicleRegistration: null });
+      setPreviews({ nicDocument: null, licenseDocument: null, vehicleRegistration: null });
     } catch (error) {
-      if (error.name === 'ValidationError') {
-        // Handle Yup validation errors
+      if (error.name === "ValidationError") {
         const validationErrors = {};
-        error.inner.forEach(err => {
+        error.inner.forEach((err) => {
           validationErrors[err.path] = err.message;
         });
         setErrors(validationErrors);
-        setMessage("");
+        messageApi.error("Please fix the validation errors.");
       } else {
         console.error("Verification submission failed", error);
-        setMessage("Submission failed. Please try again.");
+        messageApi.error("Submission failed. Please try again.");
       }
     }
   };
@@ -181,11 +158,7 @@ const VerifyAccount = () => {
           {previews[documentType] === "PDF" ? (
             <p>PDF File Uploaded</p>
           ) : (
-            <img
-              src={previews[documentType]}
-              alt={`${label} Preview`}
-              className="preview-img"
-            />
+            <img src={previews[documentType]} alt={`${label} Preview`} className="preview-img" />
           )}
         </div>
       )}
@@ -195,18 +168,12 @@ const VerifyAccount = () => {
   );
 
   const getRequiredDocuments = () => {
-    const documents = [
-      renderFileUpload("nicDocument", "Upload NIC Document")
-    ];
+    const documents = [renderFileUpload("nicDocument", "Upload NIC Document")];
 
     if (formData.role === "Driver") {
-      documents.push(
-        renderFileUpload("licenseDocument", "Upload Driver's License")
-      );
+      documents.push(renderFileUpload("licenseDocument", "Upload Driver's License"));
     } else if (formData.role === "Vehicle Owner") {
-      documents.push(
-        renderFileUpload("vehicleRegistration", "Upload Vehicle Registration Document")
-      );
+      documents.push(renderFileUpload("vehicleRegistration", "Upload Vehicle Registration Document"));
     }
 
     return documents;
@@ -214,13 +181,15 @@ const VerifyAccount = () => {
 
   return (
     <div style={{ backgroundColor: "white", minHeight: "100vh" }}>
+      {contextHolder}
       <NavigationBar />
 
       <div className="verify-container">
         <h2 className="verify-title">Verify Your Account</h2>
         <div>
           <p className="verify-subtitle">
-            <strong>To get started as a Driver or Vehicle Owner on our platform, please complete the verification process by providing your personal and identification details.
+            <strong>
+              To get started as a Driver or Vehicle Owner on our platform, please complete the verification process by providing your personal and identification details.
               Verified accounts help us maintain trust and safety across our rental community. Once verified, you'll be able to offer vehicles for rent or provide driving services, connect with customers,
               and become an active part of our growing network. We're excited to have you on board!
             </strong>
@@ -278,22 +247,15 @@ const VerifyAccount = () => {
 
           {formData.role && (
             <>
-              <h3 style={{ color: "white", marginBottom: "20px" }}>
-                Required Documents for {formData.role}
-              </h3>
-              <div >
-                {getRequiredDocuments()}
-              </div>
+              <h3 style={{ color: "white", marginBottom: "20px" }}>Required Documents for {formData.role}</h3>
+              <div>{getRequiredDocuments()}</div>
             </>
           )}
-
 
           <div className="button-container">
             <Button type="submit" value="Submit" style={{ width: "100px" }} onClick={handleSubmit} />
             <Button type="button" value="Cancel" red style={{ width: "100px" }} />
           </div>
-
-          {message && <p style={{ marginTop: "10px", color: "green" }}>{message}</p>}
         </form>
       </div>
     </div>
